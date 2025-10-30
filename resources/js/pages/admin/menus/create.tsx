@@ -38,7 +38,12 @@ export default function Create({ parents = [] }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('admin.menus.store'));
+        post(route('admin.menus.store'), {
+            onSuccess: () => {
+                window.location.reload();
+            },
+            onError: () => toast.error('Gagal menambahkan menu'),
+        });
     };
 
     return (

@@ -23,15 +23,25 @@ export default function Index({ menus }) {
     ];
     const handleDelete = (menu) => {
         if (confirm(`Hapus menu "${menu.name}"?`)) {
-            router.delete(route('admin.menus.destroy', menu.id));
+            router.delete(route('admin.menus.destroy', menu.id), {
+                onSuccess: () => window.location.reload(),
+            });
         }
     };
 
     const handleToggleActive = (menu) => {
-        router.put(route('admin.menus.update', menu.id), {
-            ...menu,
-            is_active: !menu.is_active,
-        });
+        router.put(
+            route('admin.menus.update', menu.id),
+            {
+                ...menu,
+                is_active: !menu.is_active,
+            },
+            {
+                onSuccess: () => {
+                    window.location.reload();
+                },
+            },
+        );
     };
 
     return (

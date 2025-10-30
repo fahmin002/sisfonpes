@@ -6,8 +6,9 @@ use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\GalleryController;
-use \App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\MenuController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\PageController;
 use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
@@ -39,11 +40,15 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('posts', PostController::class);
         Route::resource('galleries', GalleryController::class);
         Route::resource('menus', MenuController::class);
+        Route::resource('pages', PageController::class);
 
         Route::patch('/posts/{post}/unpublish', [PostController::class, 'unpublish'])
             ->name('posts.unpublish');
         Route::patch('/posts/{post}/publish', [PostController::class, 'publish'])
             ->name('posts.publish');
+
+        Route::patch('/pages/{page}/publish', [\App\Http\Controllers\Admin\PageController::class, 'publish'])->name('pages.publish');
+        Route::patch('/pages/{page}/unpublish', [\App\Http\Controllers\Admin\PageController::class, 'unpublish'])->name('pages.unpublish');
 
         Route::patch('galleries/{gallery}/publish', [GalleryController::class, 'publish'])->name('galleries.publish');
         Route::patch('galleries/{gallery}/unpublish', [GalleryController::class, 'unpublish'])->name('galleries.unpublish');

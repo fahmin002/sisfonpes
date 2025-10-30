@@ -44,10 +44,13 @@ class GalleryController extends Controller
             : null;
 
         Gallery::create($validated);
-
+        $message = 'Foto ' . $validated['title'] . ' berhasil ditambahkan.';
         return redirect()
             ->route('admin.galleries.index')
-            ->with('success', 'Foto ' . $validated['title'] . ' berhasil ditambahkan.');
+            ->with([
+                'message' => $message,
+                'type' => 'success',
+            ]);
     }
 
 
@@ -87,10 +90,14 @@ class GalleryController extends Controller
         }
 
         $gallery->update($validated);
-
+        $message = 'Foto ' . $gallery->title . ' berhasil diperbarui.';
+        $type = 'info';
         return redirect()
             ->route('admin.galleries.index')
-            ->with('success', 'Foto ' . $gallery->title . ' berhasil diperbarui.');
+            ->with([
+                'message' => $message,
+                'type' => $type
+            ]);
     }
 
 
@@ -99,9 +106,13 @@ class GalleryController extends Controller
     {
         if ($gallery->image) Storage::disk('public')->delete($gallery->image);
         $gallery->delete();
-
+        $message = 'Foto ' . $gallery->title . ' berhasil dihapus.';
+        $type = 'delete';
         return redirect()->route('admin.galleries.index')
-            ->with('success', 'Foto ' . $gallery->title . ' berhasil dihapus.');
+            ->with([
+                'message' => $message,
+                'type' => $type
+            ]);
     }
 
     public function publish(Gallery $gallery)
@@ -111,7 +122,10 @@ class GalleryController extends Controller
             'published_at' => now(),
         ]);
 
-        return back()->with('success', 'Foto ' . $gallery->title . ' berhasil dipublish');
+        return back()->with([
+            'message' => 'Foto ' . $gallery->title . ' berhasil dipublish',
+            'type' => 'success'
+        ]);
     }
 
     public function unpublish(Gallery $gallery)
@@ -120,7 +134,11 @@ class GalleryController extends Controller
             'is_published' => false,
             'published_at' => null,
         ]);
-
-        return back()->with('success', 'Foto ' . $gallery->title . ' berhasil diunpublish');
+        $message = 'Foto ' . $gallery->title . ' berhasil diunpublish';
+        $type = 'warning';
+        return back()->with([
+            'message' => $message,
+            'type' => $type
+        ]);
     }
 }

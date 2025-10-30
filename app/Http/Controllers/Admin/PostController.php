@@ -45,7 +45,11 @@ class PostController extends Controller
 
         Post::create($validated);
 
-        return redirect()->route('admin.posts.index')->with('success', 'Berita ' . $validated['title'] . ' berhasil ditambahkan.');
+        $message = 'Berita ' . $validated['title'] . ' berhasil ditambahkan.';
+        return redirect()->route('admin.posts.index')->with([
+            'message' => $message,
+            'type' => 'success',
+        ]);
     }
 
     public function edit(Post $post)
@@ -83,10 +87,13 @@ class PostController extends Controller
         }
 
         $post->update($validated);
-
+        $message = 'Berita ' . $validated['title'] . ' berhasil diperbarui.';
         return redirect()
             ->route('admin.posts.index')
-            ->with('success', 'Berita ' . $post->title . ' berhasil diperbarui.');
+            ->with([
+                'message' => $message,
+                'type' => 'info',
+            ]);
     }
 
 
@@ -96,8 +103,11 @@ class PostController extends Controller
             'is_published' => false,
             'published_at' => null,
         ]);
-
-        return redirect()->back()->with('success', 'Berita ' . $post->title . ' berhasil di-unpublish.');
+        $message = 'Berita ' . $post->title . ' berhasil di-unpublish.';
+        return redirect()->back()->with([
+            'message' => $message,
+            'type' => 'warning',
+        ]);
     }
 
     public function publish(Post $post)
@@ -106,8 +116,11 @@ class PostController extends Controller
             'is_published' => true,
             'published_at' => now(),
         ]);
-
-        return redirect()->back()->with('success', 'Berita ' . $post->title . ' berhasil dipublish.');
+        $message = 'Berita ' . $post->title . ' berhasil dipublish.';
+        return redirect()->back()->with([
+            'message' => $message,
+            'type' => 'info',
+        ]);
     }
 
     public function destroy(Post $post)
@@ -118,7 +131,10 @@ class PostController extends Controller
         }
 
         $post->delete();
-
-        return redirect()->route('admin.posts.index')->with('success', 'Berita ' . $title . ' berhasil dihapus.');
+        $message = 'Berita ' . $title . ' berhasil dihapus.';
+        return redirect()->route('admin.posts.index')->with([
+            'message' => $message,
+            'type' => 'delete',
+        ]);
     }
 }

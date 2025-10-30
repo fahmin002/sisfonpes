@@ -30,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('menus', $menus);
         });
+
     }
 }

@@ -31,7 +31,9 @@ export default function Index({ galleries }) {
 
     const handleDelete = (gallery) => {
         if (confirm(`Hapus foto "${gallery.title}"?`)) {
-            router.delete(route('admin.galleries.destroy', gallery.id));
+            router.delete(route('admin.galleries.destroy', gallery.id), {
+                onSuccess: () => window.location.reload(),
+            });
         }
     };
 

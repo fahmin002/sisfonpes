@@ -30,7 +30,12 @@ export default function Edit({ menu, parents = [] }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(route('admin.menus.update', menu.id));
+        put(route('admin.menus.update', menu.id), {
+            onSuccess: () => {
+                window.location.reload();
+            },
+            onError: () => toast.error('Gagal memperbarui menu'),
+        });
     };
 
     return (

@@ -26,7 +26,11 @@ export default function Create() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/admin/posts');
+        post('/admin/posts', {
+            onSuccess: () => {
+                window.location.reload();
+            },
+        });
     };
 
     return (

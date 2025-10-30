@@ -35,8 +35,12 @@ class MenuController extends Controller
         ]);
 
         Menu::create($validated);
-
-        return redirect()->route('admin.menus.index')->with('success', 'Menu ' . $validated['name'] . ' berhasil ditambahkan.');
+        $message = 'Menu ' . $validated['name'] . ' berhasil ditambahkan.';
+        $type = 'success';
+        return redirect()->route('admin.menus.index')->with([
+            'message' => $message,
+            'type' => $type,
+        ]);
     }
 
     public function edit(Menu $menu)
@@ -56,17 +60,41 @@ class MenuController extends Controller
             'url' => 'required|string',
             'order' => 'nullable|integer',
             'parent_id' => 'nullable|exists:menus,id',
+            'page_id' => 'nullable|exists:pages,id',
             'is_active' => 'boolean',
         ]);
 
         $menu->update($validated);
-        $message = ($validated['is_active'] == false ? 'Menu ' . $validated['name'] . ' berhasil dinonaktifkan.' : 'Menu ' . $validated['name'] . ' berhasil diaktifkan.');
-        return redirect()->route('admin.menus.index')->with('success', $message);
+
+        // ✅ Sinkronisasi status page yang terhubung
+        if ($menu->page) {
+            $menu->page->update([
+                'slug' => $validated['slug'],
+                'title' => $validated['name'],
+                'published_at' => $validated['is_active'] ? now() : null,
+                'is_published' => $validated['is_active'],
+            ]);
+        }
+
+        $message = $validated['is_active']
+            ? 'Menu ' . $validated['name'] . ' berhasil diaktifkan.'
+            : 'Menu ' . $validated['name'] . ' berhasil dinonaktifkan.';
+
+        return redirect()->route('admin.menus.index')->with([
+            'message' => $message,
+            'type' => 'info',
+        ]);
     }
+
 
     public function destroy(Menu $menu)
     {
         $menu->delete();
-        return redirect()->route('admin.menus.index')->with('success', 'Menu ' . $menu->name . ' berhasil dihapus.');
+        $message = 'Menu ' . $menu->name . ' berhasil dihapus.';
+        $type = 'delete';
+        return redirect()->route('admin.menus.index')->with([
+            'message' => $message,
+            'type' => $type,
+        ]);
     }
 }

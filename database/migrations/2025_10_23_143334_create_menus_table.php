@@ -14,11 +14,12 @@ return new class extends Migration
 Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // Nama menu, misalnya: "Beranda"
-            $table->string('slug')->unique(); // Slug URL-friendly, misalnya: "beranda"
+            $table->string('slug')->unique()->nullable(); // Slug URL-friendly, misalnya: "beranda"
             $table->string('url')->nullable(); // Link yang dituju, bisa internal / eksternal
             $table->unsignedBigInteger('parent_id')->nullable(); // untuk submenu
             $table->integer('order')->default(0); // urutan tampil
             $table->boolean('is_active')->default(true); // aktif atau tidak
+            $table->foreignId('page_id')->nullable()->constrained('pages')->onDelete('set null');
             $table->timestamps();
 
             // Relasi ke parent menu

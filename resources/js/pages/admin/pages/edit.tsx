@@ -6,9 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { route } from 'ziggy-js';
 
 interface ParentMenu {
     id: number;
@@ -56,9 +57,6 @@ export default function Edit({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(route('admin.pages.update', page.id), {
-            onSuccess: () => {
-                window.location.reload();
-            },
             onError: () => toast.error('Gagal memperbarui halaman'),
         });
     };

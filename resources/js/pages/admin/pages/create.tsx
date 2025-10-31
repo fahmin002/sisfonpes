@@ -6,9 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { route } from 'ziggy-js';
 
 interface ParentMenu {
     id: number;
@@ -34,7 +35,6 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post(route('admin.pages.store'), {
-            onSuccess: () => window.location.reload(),
             onError: () => toast.error('Gagal menambahkan halaman'),
         });
     };

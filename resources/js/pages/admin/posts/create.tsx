@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 
 export default function Create() {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -26,11 +26,7 @@ export default function Create() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/admin/posts', {
-            onSuccess: () => {
-                window.location.reload();
-            },
-        });
+        post('/admin/posts');
     };
 
     return (

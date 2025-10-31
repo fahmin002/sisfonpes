@@ -11,8 +11,10 @@ import {
 } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { Info } from 'lucide-react';
+import { toast } from 'sonner';
+import { route } from 'ziggy-js';
 
 export default function Edit({ menu, parents = [] }) {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -31,9 +33,6 @@ export default function Edit({ menu, parents = [] }) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(route('admin.menus.update', menu.id), {
-            onSuccess: () => {
-                window.location.reload();
-            },
             onError: () => toast.error('Gagal memperbarui menu'),
         });
     };

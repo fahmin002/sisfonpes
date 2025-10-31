@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use \App\Models\Page;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Menu extends Model
 {
+    use HasFactory;
     protected $fillable = ['name', 'slug', 'url', 'parent_id', 'page_id', 'order', 'is_active'];
 
     protected static function boot()
@@ -19,12 +21,6 @@ class Menu extends Model
                 $menu->url = rtrim($parent->url, '/') . '/' . ltrim($menu->slug, '/');
             } else {
                 $menu->url = '/' . ltrim($menu->slug, '/');
-            }
-        });
-        static::deleting(function ($menu) {
-            // Hapus menu yang terhubung ke page ini
-            if ($menu->page) {
-                $menu->page->menu()->delete();
             }
         });
     }

@@ -89,8 +89,17 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu)
     {
-        $menu->delete();
+        if ($menu->page) {
+            $menu->page->delete();
+        }
+        // Hapus semua child menu (jika nested)
+        if ($menu->children()->exists()) {
+            foreach ($menu->children as $child) {
+                $child->delete();
+            }
+        }
         $message = 'Menu ' . $menu->name . ' berhasil dihapus.';
+        $menu->delete();
         $type = 'delete';
         return redirect()->route('admin.menus.index')->with([
             'message' => $message,

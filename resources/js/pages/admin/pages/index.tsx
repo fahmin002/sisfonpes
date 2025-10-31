@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Edit2, Eye, EyeOff, FileText, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
 export default function Index({ pages }) {
@@ -24,9 +25,7 @@ export default function Index({ pages }) {
             route(routeName, page.id),
             {},
             {
-                onSuccess: () => {
-                    window.location.reload();
-                },
+                onError: () => toast.error('Gagal mempublish halaman'),
             },
         );
     };
@@ -42,7 +41,12 @@ export default function Index({ pages }) {
         if (confirm(`Hapus halaman "${page.title}"?`)) {
             router.delete(route('admin.pages.destroy', page.id), {
                 onSuccess: () => {
-                    window.location.reload();
+                    // kasih jeda kecil supaya Inertia sempat settle
+                    setTimeout(() => {
+                        router.reload({
+                            only: ['menus', 'pages'],
+                        });
+                    }, 150);
                 },
             });
         }

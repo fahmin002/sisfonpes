@@ -31,39 +31,69 @@ class PageController extends Controller
 
 
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'title' => 'required|max:255',
-        'slug' => 'required|unique:pages,slug',
-        'content' => 'required',
-        'add_to_menu' => 'boolean',
-        'menu_parent_id' => 'nullable|exists:menus,id',
-    ]);
-
-    // Otomatis publish halaman baru
-    $validated['is_published'] = true;
-    $validated['published_at'] = now();
-
-    $page = Page::create($validated);
-
-    if ($request->add_to_menu) {
-        Menu::create([
-            'name' => $validated['title'],
-            'slug' => $validated['slug'], // ← penting!
-            'url' => '/' . ltrim($validated['slug'], '/'),
-            'order' => 1,
-            'parent_id' => $request->menu_parent_id,
-            'is_active' => true,
-            'page_id' => $page->id, // opsional, jika kamu relasikan
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'slug' => 'required|unique:pages,slug',
+            'content' => 'required',
+            'add_to_menu' => 'boolean',
+            'menu_parent_id' => 'nullable|exists:menus,id',
         ]);
+        $menuMessage = null;
+        // Otomatis publish halaman baru
+        $validated['is_published'] = true;
+        $validated['published_at'] = now();
+
+        $page = Page::create($validated);
+
+        if ($request->add_to_menu) {
+            $menu = Menu::where('slug', $validated['slug'])->first();
+            if ($menu) {
+                $menu->update([
+                    'page_id' => $page->id,
+                    'parent_id' => $request->menu_parent_id,
+                    'is_active' => true
+                ]);
+                $menuMessage = "Menu diperbarui: " . $validated['title'];
+            } else {
+                Menu::create([
+                    'name' => $validated['title'],
+                    'slug' => $validated['slug'], // ← penting!
+                    'url' => '/' . ltrim($validated['slug'], '/'),
+                    'order' => 1,
+                    'parent_id' => $request->menu_parent_id,
+                    'is_active' => true,
+                    'page_id' => $page->id, // opsional, jika kamu relasikan
+                ]);
+                $menuMessage = "Menu telah dibuat: " . $validated['title'];
+            }
+        }
+
+        if ($menuMessage !== null) {
+            return redirect()
+                ->route('admin.pages.index')
+                ->with([
+                    'flash_messages' =>
+                    [
+                        [
+                            'message' => "Halaman {$page->title} berhasil dibuat.",
+                            'type' => 'success',
+                        ],
+                        [
+                            'message' => $menuMessage,
+                            'type' => 'warning'
+                        ]
+                    ]
+                ]);
+        } else {
+            return redirect()
+                ->route('admin.pages.index')
+                ->with([
+                    'message' => "Halaman {$page->title} berhasil dibuat.",
+                    'type' => 'success',
+                ]);
+        }
     }
-
-
-    return redirect()->route('admin.pages.index')->with([
-        'message' => "Halaman {$page->title} berhasil dibuat.",
-        'type' => 'success',
-    ]);
-}
 
 
     public function edit(Page $page)
@@ -93,6 +123,7 @@ class PageController extends Controller
             'add_to_menu' => 'boolean',
             'menu_parent_id' => 'nullable|exists:menus,id',
         ]);
+        $menuMessage = null;
 
         // 🔹 Update halaman utama dulu
         $page->update([
@@ -113,18 +144,30 @@ class PageController extends Controller
                     'url' => '/' . ltrim($validated['slug'], '/'),
                     'is_active' => $page->is_published,
                 ]);
+                $menuMessage = "Menu diperbarui: " . $validated['title'];
             }
             // Jika belum punya menu, buat baru
             else {
-                \App\Models\Menu::create([
-                    'name' => $validated['title'],
-                    'slug' => $validated['slug'],
-                    'url' => '/' . ltrim($validated['slug'], '/'),
-                    'order' => 1,
-                    'parent_id' => $validated['menu_parent_id'] ?: null,
-                    'is_active' => true,
-                    'page_id' => $page->id,
-                ]);
+                $menu = Menu::where('slug', $validated['slug'])->first();
+                if ($menu) {
+                    $menu->update([
+                        'page_id' => $page->id,
+                        'parent_id' => $request->menu_parent_id,
+                        'is_active' => true
+                    ]);
+                    $menuMessage = "Menu dihubungkan dengan halaman: " . $validated['title'];
+                } else {
+                    \App\Models\Menu::create([
+                        'name' => $validated['title'],
+                        'slug' => $validated['slug'],
+                        'url' => '/' . ltrim($validated['slug'], '/'),
+                        'order' => 1,
+                        'parent_id' => $validated['menu_parent_id'] ?: null,
+                        'is_active' => true,
+                        'page_id' => $page->id,
+                    ]);
+                    $menuMessage = "Menu dibuat dengan judul: " . $validated['title'];
+                }
             }
         }
         // 🔹 Jika user tidak ingin menambahkan ke menu
@@ -137,15 +180,34 @@ class PageController extends Controller
                     'url' => '/' . ltrim($validated['slug'], '/'),
                     'parent_id' => $validated['menu_parent_id'] ?: null,
                 ]);
+                $menuMessage = "Menu diperbarui: " . $validated['title'];
             }
         }
 
-        return redirect()
-            ->route('admin.pages.index')
-            ->with([
-                'message' => 'Halaman "' . $validated['title'] . '" berhasil diperbarui.',
-                'type' => 'info',
-            ]);
+        if ($menuMessage !== null) {
+            return redirect()
+                ->route('admin.pages.index')
+                ->with([
+                    'flash_messages' =>
+                    [
+                        [
+                            'message' => 'Halaman "' . $validated['title'] . '" berhasil diperbarui.',
+                            'type' => 'info',
+                        ],
+                        [
+                            'message' => $menuMessage,
+                            'type' => 'warning'
+                        ]
+                    ]
+                ]);
+        } else {
+            return redirect()
+                ->route('admin.pages.index')
+                ->with([
+                    'message' => 'Halaman "' . $validated['title'] . '" berhasil diperbarui.',
+                    'type' => 'info',
+                ]);
+        }
     }
 
 

@@ -42,12 +42,12 @@ export const mainNavItems: NavItem[] = [
     },
     {
         title: 'Halaman Statis',
-        href: '/admin/pages',
+        href: path('admin.pages.index'),
         icon: FileText,
     },
     {
         title: 'Berita & Kegiatan',
-        href: '/admin/posts',
+        href: path('admin.posts.index'),
         icon: Newspaper,
     },
     {
@@ -57,17 +57,17 @@ export const mainNavItems: NavItem[] = [
     },
     {
         title: 'Pengumuman',
-        href: '/admin/pengumuman',
+        href: path('admin.announcements.index'),
         icon: Bell,
     },
     {
         title: 'Pendaftaran Santri',
-        href: '/admin/pendaftaran',
+        href: path('admin.registrations.index'),
         icon: Users,
     },
     {
         title: 'Pesan Masuk',
-        href: '/admin/kontak',
+        href: path('admin.messages.index'),
         icon: Mail,
     },
     {

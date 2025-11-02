@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->boolean('is_published')->default(false);
-            $table->timestamp('published_at')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
             $table->timestamps();
         });
     }

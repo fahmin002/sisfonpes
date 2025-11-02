@@ -1,0 +1,4 @@
+Selesaikan urusan status pending rejected accepted.
+halaman pendaftaran
+ubah bagian index agar bisa handle accept dan reject di tabelnya
+untuk controller ubah di bagian store dan update dan toggleupdate status

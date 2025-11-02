@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\AnnouncementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PageController;
 use Inertia\Inertia;
@@ -41,16 +42,26 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('galleries', GalleryController::class);
         Route::resource('menus', MenuController::class);
         Route::resource('pages', PageController::class);
+        Route::resource('announcements', AnnouncementController::class);
+        Route::resource('registrations', \App\Http\Controllers\Admin\RegistrationController::class);
+        Route::resource('messages', \App\Http\Controllers\Admin\MessageController::class)->only([
+            'index',
+            'show',
+            'destroy',
+        ]);
+        
+        Route::patch('registrations/{registration}/updatestatus', [\App\Http\Controllers\Admin\RegistrationController::class, 'updateStatus'])->name('registrations.updateStatus');
 
         Route::patch('/posts/{post}/unpublish', [PostController::class, 'unpublish'])
             ->name('posts.unpublish');
         Route::patch('/posts/{post}/publish', [PostController::class, 'publish'])
             ->name('posts.publish');
 
+        Route::patch('/announcements/{announcement}/toggle', [AnnouncementController::class, 'toggle'])->name('announcements.toggle');
+
         Route::patch('/pages/{page}/publish', [\App\Http\Controllers\Admin\PageController::class, 'publish'])->name('pages.publish');
         Route::patch('/pages/{page}/unpublish', [\App\Http\Controllers\Admin\PageController::class, 'unpublish'])->name('pages.unpublish');
 
         Route::patch('galleries/{gallery}/publish', [GalleryController::class, 'publish'])->name('galleries.publish');
         Route::patch('galleries/{gallery}/unpublish', [GalleryController::class, 'unpublish'])->name('galleries.unpublish');
-
     });

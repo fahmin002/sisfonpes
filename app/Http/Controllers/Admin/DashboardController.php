@@ -7,7 +7,7 @@ use Inertia\Inertia;
 use App\Models\Post;
 use App\Models\Gallery;
 use App\Models\Registration;
-use App\Models\Contact;
+use App\Models\Message;
 
 class DashboardController extends Controller
 {
@@ -19,7 +19,7 @@ class DashboardController extends Controller
                 'posts' => Post::count(),
                 'galleries' => Gallery::count(),
                 'registrations' => Registration::count(),
-                'contacts' => Contact::where('is_read', false)->count(),
+                'messages' => Message::where('is_read', false)->count(),
             ],
             'recentPosts' => Post::latest()->take(5)->get(['id', 'title', 'created_at']),
         ]);

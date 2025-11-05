@@ -32,7 +32,7 @@ export default function Create() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Pengumuman" />
-            <div className="mx-auto lg:my-auto w-full max-w-4xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
+            <div className="mx-auto lg:my-auto w-full max-w-2xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-xl font-semibold">Tambah Pengumuman</h1>
                     <Link href={route('admin.announcements.index')}>

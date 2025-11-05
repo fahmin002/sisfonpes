@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PageController;
 use Inertia\Inertia;
@@ -49,7 +50,17 @@ Route::middleware(['auth', 'verified', 'admin'])
             'show',
             'destroy',
         ]);
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class)->only([
+            'index',
+            'update',
+        ]);
+
+        Route::post('settings/apply', [SettingController::class, 'apply'])->name('settings.apply');
         
+        Route::patch('users/{user}/toggle-active', [\App\Http\Controllers\Admin\UserController::class, 'toggleActive'])
+        ->name('users.toggleActive');
+
         Route::patch('registrations/{registration}/updatestatus', [\App\Http\Controllers\Admin\RegistrationController::class, 'updateStatus'])->name('registrations.updateStatus');
 
         Route::patch('/posts/{post}/unpublish', [PostController::class, 'unpublish'])

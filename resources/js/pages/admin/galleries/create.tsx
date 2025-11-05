@@ -39,7 +39,7 @@ export default function Create() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Foto Galeri" />
-            <div className="mx-auto w-full max-w-5xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
+            <div className="mx-auto my-auto w-full max-w-2xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-xl font-semibold">
                         Tambah Foto Galeri

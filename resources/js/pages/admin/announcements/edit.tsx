@@ -32,7 +32,7 @@ export default function Edit({ announcement }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit ${announcement.title}`} />
-            <div className="mx-auto lg:my-auto w-full max-w-4xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
+            <div className="mx-auto lg:my-auto w-full max-w-2xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-xl font-semibold">Edit Pengumuman</h1>
                     <Link href={route('admin.announcements.index')}>
@@ -80,11 +80,10 @@ export default function Edit({ announcement }) {
                                 <Label>Aktifkan pengumuman</Label>
                             </div> */}
 
-                            {/* Tambahkan ke menu navigasi */}
                             <div className="flex items-center justify-between rounded-md border p-3">
                                 <div>
                                     <Label htmlFor="is_active" className="mb-1 block">
-                                        Tambahkan ke menu navigasi
+                                        Aktifkan Pengumuman
                                     </Label>
                                 </div>
 

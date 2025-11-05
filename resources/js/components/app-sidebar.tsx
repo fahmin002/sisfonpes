@@ -72,12 +72,12 @@ export const mainNavItems: NavItem[] = [
     },
     {
         title: 'Pengguna',
-        href: '/admin/users',
+        href: path('admin.users.index'),
         icon: UserCog,
     },
     {
         title: 'Pengaturan Umum',
-        href: '/admin/settings',
+        href: path('admin.settings.index'),
         icon: Settings,
     },
 ];

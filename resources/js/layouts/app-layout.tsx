@@ -1,5 +1,6 @@
 import { Toaster } from '@/components/ui/sonner';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
+import { initTheme } from '@/themes';
 import { type BreadcrumbItem } from '@/types';
 import { router, usePage } from '@inertiajs/react';
 import { AlertTriangle, CheckCircle2, Pencil, Trash2 } from 'lucide-react';
@@ -70,6 +71,7 @@ export default function AppLayout({
   };
   const currentUrl = window.location.pathname;
   useEffect(() => {
+    initTheme();
     autoSync(router, currentUrl);
     // ✅ 1️⃣ Handle multiple flash messages
     if (Array.isArray(flash_messages) && flash_messages.length > 0) {
@@ -81,6 +83,8 @@ export default function AppLayout({
     if (flash?.type && flash?.message) {
       showToast(flash.type, flash.message);
     }
+
+
   }, [flash, flash_messages]);
 
   return (

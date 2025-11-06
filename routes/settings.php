@@ -52,12 +52,9 @@ Route::middleware(['auth', 'verified', 'admin'])
         ]);
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
         Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class)->only([
-            'index',
-            'update',
+            'index'
         ]);
-
-        Route::post('settings/apply', [SettingController::class, 'apply'])->name('settings.apply');
-        
+        Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
         Route::patch('users/{user}/toggle-active', [\App\Http\Controllers\Admin\UserController::class, 'toggleActive'])
         ->name('users.toggleActive');
 

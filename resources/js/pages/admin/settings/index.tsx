@@ -19,19 +19,18 @@ export default function Settings({ settings = {} }) {
       href: '/admin/settings',
     },
   ];
-
   const { data, setData, post, processing } = useForm({
     site_name: settings.site_name || 'Sistem Informasi Pesantren',
     site_tagline: settings.site_tagline || '',
     contact_email: settings.contact_email || '',
     contact_phone: settings.contact_phone || '',
     address: settings.address || '',
-    dark_mode: settings.dark_mode === 'true',
-    theme_color: settings.theme_color || '#16a34a',
-    show_announcements: settings.show_announcements === 'true',
-    show_gallery: settings.show_gallery === 'true',
-    show_blog: settings.show_blog === 'true',
-    maintenance_mode: settings.maintenance_mode === 'true',
+    dark_mode: localStorage.getItem('theme-mode') === 'dark' || settings.dark_mode === '1' ? true : false,
+    theme_name: localStorage.getItem('theme-name') || settings.theme_name || 'defaultTheme',
+    show_announcements: settings.show_announcements === '1' ? true : false,
+    show_gallery: settings.show_gallery === '1' ? true : false,
+    show_blog: settings.show_blog === '1' ? true : false,
+    maintenance_mode: settings.maintenance_mode === '1' ? true : false,
     maintenance_message:
       settings.maintenance_message ||
       'Situs sedang dalam pemeliharaan. Silakan kembali lagi nanti.',
@@ -39,10 +38,7 @@ export default function Settings({ settings = {} }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post(route('admin.settings.update'), {
-      onSuccess: () => toast.success('Pengaturan berhasil diperbarui ✅'),
-      onError: () => toast.error('Gagal memperbarui pengaturan'),
-    });
+    post(route('admin.settings.update'));
   };
 
   const handleSync = () => {
@@ -54,7 +50,7 @@ export default function Settings({ settings = {} }) {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Pengaturan Umum" />
 
-      <div className="mx-auto w-full max-w-5xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
+      <div className="mx-auto my-auto w-full max-w-5xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold">Pengaturan Umum</h1>
           <div className="space-x-2">
@@ -89,6 +85,7 @@ export default function Settings({ settings = {} }) {
                       value={data.site_name}
                       onChange={(e) => setData('site_name', e.target.value)}
                       placeholder="Nama situs pesantren"
+                      className='mt-2'
                     />
                   </div>
                   <div>
@@ -97,6 +94,7 @@ export default function Settings({ settings = {} }) {
                       value={data.site_tagline}
                       onChange={(e) => setData('site_tagline', e.target.value)}
                       placeholder="Tagline atau slogan"
+                      className='mt-2'
                     />
                   </div>
                   <div>
@@ -107,6 +105,7 @@ export default function Settings({ settings = {} }) {
                         setData('contact_email', e.target.value)
                       }
                       placeholder="contoh@domain.com"
+                      className='mt-2'
                     />
                   </div>
                   <div>
@@ -117,6 +116,7 @@ export default function Settings({ settings = {} }) {
                         setData('contact_phone', e.target.value)
                       }
                       placeholder="08xxxxxxxxxx"
+                      className='mt-2'
                     />
                   </div>
                   <div>
@@ -125,6 +125,7 @@ export default function Settings({ settings = {} }) {
                       value={data.address}
                       onChange={(e) => setData('address', e.target.value)}
                       placeholder="Alamat lengkap pesantren"
+                      className='mt-2'
                     />
                   </div>
                 </TabsContent>
@@ -143,7 +144,7 @@ export default function Settings({ settings = {} }) {
                       checked={data.dark_mode}
                       onCheckedChange={(val) => {
                         setData("dark_mode", val);
-                        setActiveTheme(data.theme_name || "material", val ? "dark" : "light");
+                        setActiveTheme(data.theme_name || "defaultTheme", val ? "dark" : "light");
                       }}
                     />
                   </div>
@@ -158,7 +159,7 @@ export default function Settings({ settings = {} }) {
                         setActiveTheme(val, data.dark_mode ? "dark" : "light");
                       }}
                     >
-                      <SelectTrigger className="w-[250px]">
+                      <SelectTrigger className="w-[250px] mt-2">
                         <SelectValue placeholder="Pilih Tema" />
                       </SelectTrigger>
                       <SelectContent>

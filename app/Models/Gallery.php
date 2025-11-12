@@ -9,7 +9,7 @@ class Gallery extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'image', 'description', 'is_published', 'published_at'];
+    protected $fillable = ['title', 'image', 'description', 'is_published', 'published_at', 'is_hero'];
     protected $casts = [
         'is_published' => 'boolean',
         'published_at' => 'datetime'

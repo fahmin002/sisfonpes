@@ -47,15 +47,15 @@ export default function Edit({ post }: EditProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit Berita - ${post.title}`} />
-            <div className="mx-auto w-full max-w-6xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between">
+            <div className="mx-auto w-full h-full bg-card p-6 shadow-sm">
+                <div className="mb-4 flex items-center max-w-2xl mx-auto justify-between">
                     <h1 className="text-xl font-semibold">Edit Berita</h1>
                     <Link href="/admin/posts">
                         <Button variant="outline">Kembali</Button>
                     </Link>
                 </div>
 
-                <Card>
+                <Card className='mx-auto max-w-2xl'>
                     <CardHeader>
                         <CardTitle>Form Edit Berita</CardTitle>
                     </CardHeader>

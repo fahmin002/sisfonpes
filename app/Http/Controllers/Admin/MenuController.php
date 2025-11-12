@@ -9,17 +9,34 @@ use Inertia\Inertia;
 
 class MenuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $menus = Menu::with('parent')->orderBy('order')->get();
-        return Inertia::render('admin/menus/index', [
+        $query = Menu::query()->with('parent');
+
+        if ($search = $request->get('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('slug', 'like', "%{$search}%");
+        }
+
+        $menus = $query->orderBy('order')->paginate(10)->withQueryString();
+
+        return inertia('admin/menus/index', [
             'menus' => $menus,
+            'filters' => $request->only('search'),
         ]);
     }
 
     public function create()
     {
-        $parents = Menu::whereNull('parent_id')->get();
+        $parents = Menu::where(function ($query) {
+            $query->whereNull('parent_id') // ambil level 0 (induk)
+                ->orWhereHas('parent', function ($q) {
+                    $q->whereNull('parent_id'); // ambil level 1 (anak dari induk)
+                });
+        })
+            ->whereNull('page_id') // opsional, biar cuma menu non-halaman statis
+            ->get(['id', 'name', 'slug', 'parent_id']);
+
         return Inertia::render('admin/menus/create', ['parents' => $parents]);
     }
 
@@ -45,7 +62,16 @@ class MenuController extends Controller
 
     public function edit(Menu $menu)
     {
-        $parents = Menu::whereNull('parent_id')->where('id', '!=', $menu->id)->get();
+        $parents = Menu::where(function ($query) use ($menu) {
+            $query->whereNull('parent_id') // level 0
+                ->orWhereHas('parent', function ($q) {
+                    $q->whereNull('parent_id'); // level 1 (anak dari level 0)
+                });
+        })
+            ->where('id', '!=', $menu->id) // kecuali dirinya sendiri
+            ->orWhere('id', $menu->parent_id) // biar parent yang sudah dipilih tetap muncul
+            ->get();
+
         return Inertia::render('admin/menus/edit', [
             'menu' => $menu,
             'parents' => $parents,

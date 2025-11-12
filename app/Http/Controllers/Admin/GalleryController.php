@@ -10,12 +10,21 @@ use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $galleries = Gallery::orderByDesc('created_at')->get();
+        $query = Gallery::query();
+
+        if ($search = $request->get('search')) {
+            $query->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        }
+        
+        $galleries = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
 
         return Inertia::render('admin/galleries/index', [
             'galleries' => $galleries,
+            'filters' => $request->only('search')
+            
         ]);
     }
 
@@ -31,6 +40,7 @@ class GalleryController extends Controller
             'description' => 'nullable|string',
             'image' => 'required|image|max:2048',
             'is_published' => 'boolean',
+            'is_hero' => 'boolean'
         ]);
 
         // Upload file gambar
@@ -69,6 +79,7 @@ class GalleryController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'is_published' => 'boolean',
+            'is_hero' => 'boolean'
         ]);
 
         // Handle image upload

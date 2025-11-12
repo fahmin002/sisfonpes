@@ -1,6 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PaginationLinks from '@/components/ui/pagination-links';
+import SearchBar from '@/components/ui/search-bar';
 import {
     Tooltip,
     TooltipContent,
@@ -15,7 +17,7 @@ import { Edit2, Eye, EyeOff, FileText, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
-export default function Index({ pages }) {
+export default function Index({ pages, filters }) {
     const handleTogglePublish = (page) => {
         const routeName = page.is_published
             ? 'admin.pages.unpublish'
@@ -61,12 +63,19 @@ export default function Index({ pages }) {
                     <h1 className="text-xl font-semibold">
                         Manajemen Halaman Statis
                     </h1>
-                    <Link href={route('admin.pages.create')}>
-                        <Button>
-                            <FileText className="mr-2 h-4 w-4" />
-                            Tambah Halaman
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <SearchBar
+                            routeName="admin.pages.index"
+                            placeholder="Cari Halaman..."
+                            initialValue={filters?.search || ''} // kalau kamu kirim dari controller
+                        />
+                        <Link href={route('admin.pages.create')}>
+                            <Button>
+                                <FileText className="mr-2 h-4 w-4" />
+                                Tambah Halaman
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <Card>
@@ -74,7 +83,8 @@ export default function Index({ pages }) {
                         <CardTitle>Daftar Halaman</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {pages.length > 0 ? (
+                        {pages.data.length > 0 ? (
+                            <>
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="border-b">
@@ -85,13 +95,19 @@ export default function Index({ pages }) {
                                         <th className="py-2 text-left">
                                             Status
                                         </th>
+                                        <th className="py-2 text-left">
+                                            URL Halaman
+                                        </th>
+                                        <th className='py-2 text-left'>
+                                            Terkait Menu
+                                        </th>
                                         <th className="py-2 text-right">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {pages.map((page) => (
+                                    {pages.data.map((page) => (
                                         <tr
                                             key={page.id}
                                             className={cn(
@@ -116,6 +132,36 @@ export default function Index({ pages }) {
                                                         ? 'Published'
                                                         : 'Draft'}
                                                 </Badge>
+                                            </td>
+                                            {/* URL Halaman */}
+                                            {/* url dari lazy load menu terkait */}
+                                            <td className='py02'>
+                                                <a
+                                                    href={`${page.menu?.url || '/' + page.slug}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 underline"
+                                                >
+                                                    {`${page.menu?.url || '/' + page.slug}`}
+                                                </a>
+                                            </td>
+                                            {/* Terkait Menu */}
+                                            <td className='py-2'>
+                                                {page.menu ? (
+                                                    <Link
+                                                        href={route(
+                                                            'admin.menus.edit',
+                                                            page.menu.id,
+                                                        )}
+                                                        className="text-blue-600 underline"
+                                                    >
+                                                        {page.menu.name}
+                                                    </Link>
+                                                ) : (
+                                                    <span className="text-muted-foreground">
+                                                        Tidak ada
+                                                    </span>
+                                                )}
                                             </td>
                                             <td className="space-x-1 py-2 text-right">
                                                 <TooltipProvider>
@@ -189,6 +235,8 @@ export default function Index({ pages }) {
                                     ))}
                                 </tbody>
                             </table>
+                            <PaginationLinks links={pages.links} />
+                            </>
                         ) : (
                             <p className="text-sm text-muted-foreground">
                                 Belum ada halaman statis.

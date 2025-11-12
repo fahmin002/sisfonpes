@@ -15,6 +15,9 @@ class Page extends Model
         'content',
         'is_published',
         'published_at',
+        'is_info_link',
+        'thumbnail',
+        'excerpt',
     ];
 
     protected static function boot()

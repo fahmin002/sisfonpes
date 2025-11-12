@@ -10,15 +10,24 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::query()
-            ->when(request('status') === 'published', fn($q) => $q->where('is_published', true))
-            ->when(request('status') === 'draft', fn($q) => $q->where('is_published', false))
-            ->orderByDesc('created_at')
-            ->get();
+        $query = Post::query();
+
+        if ($search = $request->get('search')) {
+            $query->where('title', 'like', "%{$search}%")
+                ->orWhere('content', 'like', "%{$search}%");
+        }
+
+        $query->when(request('status') === 'published', fn($q) => $q->where('is_published', true))
+            ->when(request('status') === 'draft', fn($q) => $q->where('is_published', false));
+
+        $posts = $query->orderByDesc('created_at')
+            ->paginate(10)->withQueryString();
+
         return Inertia::render('admin/posts/index', [
             'posts' => $posts,
+            'filters' => $request->only('search'. 'status')
         ]);
     }
 

@@ -1,6 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PaginationLinks from '@/components/ui/pagination-links';
+import SearchBar from '@/components/ui/search-bar';
 import {
   Tooltip,
   TooltipContent,
@@ -14,7 +16,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Edit2, Trash2, EyeOff, Eye, Plus } from 'lucide-react';
 import { route } from 'ziggy-js';
 
-export default function Index({ users }) {
+export default function Index({ users, filters }) {
   const breadcrumbs: BreadcrumbItem[] = [
     {
       title: 'Pengguna',
@@ -39,11 +41,18 @@ export default function Index({ users }) {
       <div className="p-4">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold">Manajemen Pengguna</h1>
-          <Link href={route('admin.users.create')}>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> Tambah Pengguna
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <SearchBar 
+              routeName='admin.users.index'
+              placeholder='Cari Pengguna...'
+              initialValue={filters?.search || ''}
+            />
+              <Link href={route('admin.users.create')}>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" /> Tambah Pengguna
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <Card>
@@ -51,7 +60,7 @@ export default function Index({ users }) {
             <CardTitle>Daftar Pengguna</CardTitle>
           </CardHeader>
           <CardContent>
-            {users.length > 0 ? (
+            {users.data.length > 0 ? (
               <TooltipProvider>
                 <table className="w-full text-sm">
                   <thead>
@@ -64,7 +73,7 @@ export default function Index({ users }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user) => (
+                    {users.data.map((user) => (
                       <tr
                         key={user.id}
                         className={cn('border-b transition-colors hover:bg-muted/40')}
@@ -128,6 +137,7 @@ export default function Index({ users }) {
                     ))}
                   </tbody>
                 </table>
+                <PaginationLinks links={users.links} />
               </TooltipProvider>
             ) : (
               <p className="text-sm text-muted-foreground">Belum ada pengguna.</p>

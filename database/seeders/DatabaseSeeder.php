@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Menu;
-use App\Models\Post;
 use Carbon\Carbon;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -37,5 +35,11 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
             ]);
         }
+
+        $this->call([
+            SettingSeeder::class,
+            MenuSeeder::class,
+            PostSeeder::class,
+        ]);
     }
 }

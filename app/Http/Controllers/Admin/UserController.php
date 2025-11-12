@@ -10,12 +10,20 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderByDesc('created_at')->get();
+        $query = User::query();
+
+        if ($search = $request->get('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        $users = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
 
         return Inertia::render('admin/users/index', [
             'users' => $users,
+            'filters' => $request->only('search')
         ]);
     }
 

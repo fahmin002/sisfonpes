@@ -33,15 +33,15 @@ export default function Create() {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Tambah Pengguna" />
 
-      <div className="mx-auto my-auto w-full max-w-2xl rounded-xl border bg-card p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
+      <div className="mx-auto w-full h-full bg-card p-6 shadow-sm">
+        <div className="mb-4 max-w-2xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-semibold">Tambah Pengguna</h1>
           <Link href={route('admin.users.index')}>
             <Button variant="outline">Kembali</Button>
           </Link>
         </div>
 
-        <Card>
+        <Card className='max-w-2xl mx-auto'>
           <CardHeader>
             <CardTitle>Form Pengguna</CardTitle>
           </CardHeader>

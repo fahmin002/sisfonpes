@@ -18,6 +18,9 @@ return new class extends Migration
             $table->text('content');
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
+            $table->boolean('is_info_link')->default(false);
+            $table->string('thumbnail')->nullable();
+            $table->string('excerpt')->nullable();
             $table->timestamps();
         });
     }

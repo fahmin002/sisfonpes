@@ -23,6 +23,15 @@ class Menu extends Model
                 $menu->url = '/' . ltrim($menu->slug, '/');
             }
         });
+
+        static::creating(function ($menu) {
+            if ($menu->parent_id) {
+                $parent = Menu::find($menu->parent_id);
+                if ($parent && $parent->page_id) {
+                    $parent->update(['page_id' => null]);
+                }
+            }
+        });
     }
 
     public function children()

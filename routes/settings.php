@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\ProgramController;
+
 use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
@@ -19,7 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+    
     Route::get('settings/password', [PasswordController::class, 'edit'])->name('user-password.edit');
 
     Route::put('settings/password', [PasswordController::class, 'update'])
@@ -43,6 +45,7 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('galleries', GalleryController::class);
         Route::resource('menus', MenuController::class);
         Route::resource('pages', PageController::class);
+        Route::resource('programs', ProgramController::class);
         Route::resource('announcements', AnnouncementController::class);
         Route::resource('registrations', \App\Http\Controllers\Admin\RegistrationController::class);
         Route::resource('messages', \App\Http\Controllers\Admin\MessageController::class)->only([
@@ -73,3 +76,4 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::patch('galleries/{gallery}/publish', [GalleryController::class, 'publish'])->name('galleries.publish');
         Route::patch('galleries/{gallery}/unpublish', [GalleryController::class, 'unpublish'])->name('galleries.unpublish');
     });
+

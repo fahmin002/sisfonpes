@@ -12,12 +12,21 @@ class RegistrationController extends Controller
     /**
      * Tampilkan daftar pendaftar.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $registrations = Registration::orderByDesc('created_at')->get();
+        $query = Registration::query();
+        if ($search = $request->get('search')) {
+            $query->where('registration_code', "%{$search}%")
+                ->orWhere('full_name', 'like', "%{$search}%")
+                ->orWhere('parent_name', 'like', "%{$search}%");
+        }
+
+
+        $registrations = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
 
         return Inertia::render('admin/registrations/index', [
             'registrations' => $registrations,
+            'filters' => $request->only('search')
         ]);
     }
 
@@ -65,6 +74,12 @@ class RegistrationController extends Controller
         ]);
     }
 
+    public function show(Registration $registration)
+    {
+        return Inertia::render('admin/registrations/show', [
+            'registration' => $registration,
+        ]);
+    }
     /**
      * Update data pendaftar.
      */

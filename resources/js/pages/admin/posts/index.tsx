@@ -1,6 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PaginationLinks from '@/components/ui/pagination-links';
+import SearchBar from '@/components/ui/search-bar';
 import {
     Tooltip,
     TooltipContent,
@@ -13,7 +15,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Edit2, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { route } from 'ziggy-js';
-export default function Index({ posts }) {
+export default function Index({ posts, filters }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Berita & Kegiatan',
@@ -41,12 +43,19 @@ export default function Index({ posts }) {
             <div className="p-4">
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-xl font-semibold">Manajemen Berita</h1>
-                    <Link href="/admin/posts/create">
-                        <Button>
-                            {' '}
-                            <Plus className="mr-2 h-4 w-4" /> Tambah Berita
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <SearchBar
+                            routeName="admin.posts.index"
+                            placeholder="Cari Berita..."
+                            initialValue={filters?.search || ''} // kalau kamu kirim dari controller
+                        />
+                        <Link href="/admin/posts/create">
+                            <Button>
+                                {' '}
+                                <Plus className="mr-2 h-4 w-4" /> Tambah Berita
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <Card>
@@ -54,7 +63,7 @@ export default function Index({ posts }) {
                         <CardTitle>Daftar Berita</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {posts.length > 0 ? (
+                        {posts.data.length > 0 ? (
                             <TooltipProvider>
                                 <table className="w-full text-sm">
                                     <thead>
@@ -74,7 +83,7 @@ export default function Index({ posts }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {posts.map((post) => (
+                                        {posts.data.map((post) => (
                                             <tr
                                                 key={post.id}
                                                 className={cn(
@@ -178,6 +187,7 @@ export default function Index({ posts }) {
                                         ))}
                                     </tbody>
                                 </table>
+                                <PaginationLinks links={posts.links} />
                             </TooltipProvider>
                         ) : (
                             <p className="text-sm text-muted-foreground">

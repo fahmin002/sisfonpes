@@ -23,6 +23,7 @@ import {
     Mail,
     Menu,
     Newspaper,
+    Pen,
     Settings,
     UserCog,
     Users,
@@ -54,6 +55,11 @@ export const mainNavItems: NavItem[] = [
         title: 'Galeri',
         href: path('admin.galleries.index'),
         icon: Image,
+    },
+    {
+        title: 'Program Pendidikan',
+        href: path('admin.programs.index'),
+        icon: Pen
     },
     {
         title: 'Pengumuman',
@@ -97,7 +103,7 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" variant="inset" className='border-r-1 border-r-[--muted-foreground]/10'>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -115,7 +121,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

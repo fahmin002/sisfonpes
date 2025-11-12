@@ -37,12 +37,23 @@ export default function Edit({ menu, parents = [] }) {
         });
     };
 
+        const handleNameSlugUrlChange = (name: string) => {
+        setData('name', name);
+        const slug = name
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+        setData('slug', slug);
+        setData('url', `/${slug}`);
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit Menu - ${menu.name}`} />
 
-            <div className="mx-auto w-full max-w-2xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between">
+            <div className="mx-auto w-full h-full bg-card p-6 shadow-sm">
+                <div className="mb-4 max-w-2xl mx-auto flex items-center justify-between">
                     <h1 className="text-xl font-semibold">
                         Edit Menu Navigasi
                     </h1>
@@ -51,7 +62,7 @@ export default function Edit({ menu, parents = [] }) {
                     </Link>
                 </div>
 
-                <Card>
+                <Card className='max-w-2xl mx-auto'>
                     <CardHeader>
                         <CardTitle>Form Edit Menu</CardTitle>
                     </CardHeader>
@@ -64,7 +75,7 @@ export default function Edit({ menu, parents = [] }) {
                                     id="name"
                                     value={data.name}
                                     onChange={(e) =>
-                                        setData('name', e.target.value)
+                                        handleNameSlugUrlChange(e.target.value)
                                     }
                                     placeholder="Contoh: Tentang Kami"
                                     className="mt-2"
@@ -95,9 +106,7 @@ export default function Edit({ menu, parents = [] }) {
                                 <Input
                                     id="slug"
                                     value={data.slug}
-                                    onChange={(e) =>
-                                        setData('slug', e.target.value)
-                                    }
+                                    disabled
                                     placeholder="tentang"
                                     className="mt-2"
                                 />
@@ -114,9 +123,7 @@ export default function Edit({ menu, parents = [] }) {
                                 <Input
                                     id="url"
                                     value={data.url}
-                                    onChange={(e) =>
-                                        setData('url', e.target.value)
-                                    }
+                                    disabled
                                     placeholder="/tentang"
                                     className="mt-2"
                                 />

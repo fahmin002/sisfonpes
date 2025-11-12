@@ -8,6 +8,8 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Save } from 'lucide-react';
 import { route } from 'ziggy-js';
+import { Switch } from '@/components/ui/switch';
+
 export default function Edit({ gallery }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -31,6 +33,7 @@ export default function Edit({ gallery }) {
         description: gallery.description || '',
         image: null as File | null,
         is_published: Boolean(gallery.is_published),
+        is_hero: Boolean(gallery.is_hero),
         _method: 'PUT',
     });
 
@@ -131,6 +134,22 @@ export default function Edit({ gallery }) {
                                     </p>
                                 )}
                             </div>
+
+                            <div className="flex items-center justify-between rounded-md border p-3">
+                                <div>
+                                    <Label htmlFor="is_hero">Jadikan Gambar Hero</Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        Tandai gambar ini agar muncul di halaman depan.
+                                    </p>
+                                </div>
+
+                                <Switch
+                                    id="is_hero"
+                                    checked={Boolean(data.is_hero)}
+                                    onCheckedChange={(val) => setData('is_hero', val)}
+                                />
+                            </div>
+
 
                             {/* Checkbox Publikasi */}
                             <div className="flex items-center space-x-2">

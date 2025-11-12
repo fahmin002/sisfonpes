@@ -92,9 +92,8 @@ export default function AppLayout({
       {children}
       <Toaster
         position="top-right"
-        richColors
         closeButton
-        expand
+        expand={false}
         toastOptions={{
           duration: 4000,
           style: {

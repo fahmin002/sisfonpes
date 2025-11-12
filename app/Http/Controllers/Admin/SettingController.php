@@ -7,6 +7,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -22,8 +23,29 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
-        // Loop semua input dan update satu-satu
-        foreach ($request->except('_token') as $key => $value) {
+
+        // Ambil setting logo saat ini
+        $currentLogo = Setting::where('key', 'logo')->value('value');
+
+        // Handle upload logo baru
+        if ($request->hasFile('logo')) {
+            // Hapus logo lama jika ada
+            if ($currentLogo && Storage::disk('public')->exists($currentLogo)) {
+                Storage::disk('public')->delete($currentLogo);
+            }
+
+            // Simpan logo baru
+            $path = $request->file('logo')->store('settings', 'public');
+
+            // Update atau buat setting baru untuk logo
+            Setting::updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => $path]
+            );
+        }
+
+        // Update semua field lain selain `_token` dan `logo`
+        foreach ($request->except(['_token', 'logo']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
@@ -32,6 +54,7 @@ class SettingController extends Controller
             'type' => 'success',
         ]);
     }
+
 
     public function apply()
     {

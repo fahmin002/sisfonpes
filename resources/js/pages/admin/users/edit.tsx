@@ -35,15 +35,15 @@ export default function Edit({ user }) {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Edit Pengguna" />
 
-      <div className="mx-auto w-full my-auto max-w-2xl rounded-xl border bg-card p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
+      <div className="mx-auto w-full h-full bg-card p-6 shadow-sm">
+        <div className="mb-4 flex max-w-2xl mx-auto items-center justify-between">
           <h1 className="text-xl font-semibold">Edit Pengguna</h1>
           <Link href={route('admin.users.index')}>
             <Button variant="outline">Kembali</Button>
           </Link>
         </div>
 
-        <Card>
+        <Card className='max-w-2xl mx-auto'>
           <CardHeader>
             <CardTitle>Form Edit Pengguna</CardTitle>
           </CardHeader>
@@ -67,7 +67,7 @@ export default function Edit({ user }) {
                   type="email"
                   value={data.email}
                   onChange={(e) => setData('email', e.target.value)}
-                    className='mt-2'
+                  className='mt-2'
                 />
                 {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
               </div>
@@ -92,7 +92,7 @@ export default function Edit({ user }) {
                   type="password"
                   value={data.password}
                   onChange={(e) => setData('password', e.target.value)}
-                    className='mt-2'
+                  className='mt-2'
                 />
               </div>
 
@@ -105,7 +105,7 @@ export default function Edit({ user }) {
                   onChange={(e) =>
                     setData('password_confirmation', e.target.value)
                   }
-                    className='mt-2'
+                  className='mt-2'
                 />
               </div>
 

@@ -163,3 +163,10 @@
   margin-top: 1rem;
   margin-bottom: 0.5rem;
 }
+
+[data-sonner-toast][data-styled=true] [data-description] {
+    color: var(--muted-foreground) !important;
+}
+[data-sonner-toast][data-styled=true] [data-close-button] {
+    color: var(--muted-foreground) !important;
+}

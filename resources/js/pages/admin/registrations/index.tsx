@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react"
+import { Eye, MoreHorizontal } from "lucide-react"
 import {
   Tooltip,
   TooltipContent,
@@ -22,10 +22,12 @@ import { Head, Link, router } from "@inertiajs/react";
 import { Edit2, Plus, Trash2 } from "lucide-react";
 import { route } from "ziggy-js";
 import StatusActionDropdown from "./components/statusActionDropdown";
+import SearchBar from "@/components/ui/search-bar";
+import PaginationLinks from "@/components/ui/pagination-links";
 
 
 
-export default function Index({ registrations }) {
+export default function Index({ registrations, filters }) {
   const breadcrumbs: BreadcrumbItem[] = [
     {
       title: "Pendaftaran Santri",
@@ -57,11 +59,18 @@ export default function Index({ registrations }) {
       <div className="p-4">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold">Manajemen Pendaftaran Santri</h1>
+          <div className="flex gap-2">
+            <SearchBar
+              routeName="admin.registrations.index"
+              placeholder="Cari Pendaftar..."
+              initialValue={filters?.search || ''}
+            />
           <Link href="/admin/registrations/create">
             <Button>
               <Plus className="mr-2 h-4 w-4" /> Tambah Pendaftar
             </Button>
           </Link>
+          </div>
         </div>
 
         <Card>
@@ -69,7 +78,7 @@ export default function Index({ registrations }) {
             <CardTitle>Daftar Pendaftar</CardTitle>
           </CardHeader>
           <CardContent>
-            {registrations.length > 0 ? (
+            {registrations.data.length > 0 ? (
               <TooltipProvider>
                 <table className="w-full text-sm">
                   <thead>
@@ -77,11 +86,12 @@ export default function Index({ registrations }) {
                       <th className="py-2 text-left">Nama Lengkap</th>
                       <th className="py-2 text-left">Tanggal Daftar</th>
                       <th className="py-2 text-left">Status</th>
+                      <th className="py-2 text-left">Detail</th>
                       <th className="py-2 text-right">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {registrations.map((reg) => (
+                    {registrations.data.map((reg) => (
                       <tr
                         key={reg.id}
                         className={cn("border-b transition-colors hover:bg-muted/40")}
@@ -107,6 +117,15 @@ export default function Index({ registrations }) {
                                 : 'Menunggu'}
                           </Badge>
 
+                        </td>
+                        <td className="py-2">
+                          <Link
+                            href={route("admin.registrations.show", reg.id)}
+                            className="text-emerald-600 underline"
+                          >
+                            <Eye className="inline-block mr-1 h-4 w-4" />
+                            Lihat Detail
+                          </Link>
                         </td>
                         <td className="space-x-1 py-2 text-right">
                           {/* Edit */}
@@ -135,81 +154,6 @@ export default function Index({ registrations }) {
                                 <DropdownMenuLabel>Aksi Status</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <StatusActionDropdown reg={reg} handleStatusChange={handleStatusChange} />
-                                {/* {reg.status === 'accepted' ? (
-                                  <>
-                                    <DropdownMenuItem
-                                      onClick={() => handleStatusChange("rejected", reg)}
-                                      className="text-red-600"
-                                    >
-                                      <X className="mr-2 h-4 w-4" />
-                                      Tolak Pendaftar
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleStatusChange("pending", reg)}
-                                      className="text-yellow-600"
-                                    >
-                                      <RotateCcw className="mr-2 h-4 w-4" />
-                                      Reset Status
-                                    </DropdownMenuItem>
-                                  </>
-                                ) : null}
-                                {reg.status === 'rejected' ? (
-                                  <>
-                                    <DropdownMenuItem
-                                      onClick={() => handleStatusChange("accepted", reg)}
-                                      className="text-green-600"
-                                    >
-                                      <Check className="mr-2 h-4 w-4" />
-                                      Verifikasi (Terima)
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleStatusChange("pending", reg)}
-                                      className="text-yellow-600"
-                                    >
-                                      <RotateCcw className="mr-2 h-4 w-4" />
-                                      Reset Status
-                                    </DropdownMenuItem>
-                                  </>
-                                ) : null}
-                                {reg.status === 'pending' ? (
-                                  <>
-                                    <DropdownMenuItem
-                                      onClick={() => handleStatusChange("accepted", reg)}
-                                      className="text-green-600"
-                                    >
-                                      <Check className="mr-2 h-4 w-4" />
-                                      Verifikasi (Terima)
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => handleStatusChange("rejected", reg)}
-                                      className="text-red-600"
-                                    >
-                                      <X className="mr-2 h-4 w-4" />
-                                      Tolak Pendaftar
-                                    </DropdownMenuItem>
-                                  </>
-                                ) : null} */}
-                                {/* <DropdownMenuItem
-                                  onClick={() => handleStatusChange("accepted", reg)}
-                                  className="text-green-600"
-                                >
-                                  <Check className="mr-2 h-4 w-4" />
-                                  Verifikasi (Terima)
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleStatusChange("rejected", reg)}
-                                  className="text-red-600"
-                                >
-                                  <X className="mr-2 h-4 w-4" />
-                                  Tolak Pendaftar
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleStatusChange("pending", reg)}
-                                  className="text-yellow-600"
-                                >
-                                  <RotateCcw className="mr-2 h-4 w-4" />
-                                  Reset Status
-                                </DropdownMenuItem> */}
                               </DropdownMenuContent>
                             </DropdownMenu>
                             <TooltipContent>
@@ -234,6 +178,7 @@ export default function Index({ registrations }) {
                     ))}
                   </tbody>
                 </table>
+                <PaginationLinks links={registrations.links} />
               </TooltipProvider>
             ) : (
               <p className="text-sm text-muted-foreground">Belum ada pendaftar.</p>

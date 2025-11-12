@@ -1,6 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PaginationLinks from '@/components/ui/pagination-links';
+import SearchBar from '@/components/ui/search-bar';
 import {
     Tooltip,
     TooltipContent,
@@ -13,7 +15,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Edit2, Eye, EyeOff, ImagePlus, Trash2 } from 'lucide-react';
 import { route } from 'ziggy-js';
-export default function Index({ galleries }) {
+export default function Index({ galleries, filters }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Galeri',
@@ -42,12 +44,19 @@ export default function Index({ galleries }) {
             <div className="p-4">
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-xl font-semibold">Manajemen Galeri</h1>
-                    <Link href="/admin/galleries/create">
-                        <Button>
-                            <ImagePlus className="mr-2 h-4 w-4" />
-                            Tambah Foto
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <SearchBar
+                            routeName='admin.galleries.index'
+                            initialValue={filters?.search || ''}
+                            placeholder='Cari Gambar...'
+                        />
+                        <Link href="/admin/galleries/create">
+                            <Button>
+                                <ImagePlus className="mr-2 h-4 w-4" />
+                                Tambah Foto
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <Card>
@@ -55,10 +64,10 @@ export default function Index({ galleries }) {
                         <CardTitle>Daftar Galeri</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {galleries.length > 0 ? (
+                        {galleries.data.length > 0 ? (
                             <TooltipProvider>
                                 <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-                                    {galleries.map((gallery) => (
+                                    {galleries.data.map((gallery) => (
                                         <div
                                             key={gallery.id}
                                             className={cn(
@@ -183,6 +192,7 @@ export default function Index({ galleries }) {
                                         </div>
                                     ))}
                                 </div>
+                                <PaginationLinks links={galleries.links} />
                             </TooltipProvider>
                         ) : (
                             <p className="text-sm text-muted-foreground">

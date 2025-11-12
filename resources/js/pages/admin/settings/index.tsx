@@ -19,7 +19,7 @@ export default function Settings({ settings = {} }) {
       href: '/admin/settings',
     },
   ];
-  const { data, setData, post, processing } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     site_name: settings.site_name || 'Sistem Informasi Pesantren',
     site_tagline: settings.site_tagline || '',
     contact_email: settings.contact_email || '',
@@ -34,6 +34,7 @@ export default function Settings({ settings = {} }) {
     maintenance_message:
       settings.maintenance_message ||
       'Situs sedang dalam pemeliharaan. Silakan kembali lagi nanti.',
+    logo: settings.logo || null
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,8 +51,8 @@ export default function Settings({ settings = {} }) {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Pengaturan Umum" />
 
-      <div className="mx-auto my-auto w-full max-w-5xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
+      <div className="mx-auto h-full w-full bg-card p-6 shadow-sm">
+        <div className="mb-4 max-w-2xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-semibold">Pengaturan Umum</h1>
           <div className="space-x-2">
             <Button variant="secondary" onClick={handleSync}>
@@ -63,7 +64,7 @@ export default function Settings({ settings = {} }) {
           </div>
         </div>
 
-        <Card>
+        <Card className='max-w-2xl mx-auto'>
           <CardHeader>
             <CardTitle>Form Pengaturan</CardTitle>
           </CardHeader>
@@ -127,6 +128,41 @@ export default function Settings({ settings = {} }) {
                       placeholder="Alamat lengkap pesantren"
                       className='mt-2'
                     />
+                  </div>
+                  <div>
+                    <Label>
+                      Logo
+                    </Label>
+                    <Input
+                      id="logo"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        setData(
+                          'logo',
+                          e.target.files?.[0] ?? null,
+                        )
+                      }
+                      className="mt-2"
+                    />
+
+                    {settings.logo && (
+                      <div className="mt-3">
+                        <p className="mb-1 text-sm text-muted-foreground">
+                          Logo saat ini:
+                        </p>
+                        <img
+                          src={`/storage/${settings.logo}`}
+                          alt={settings.site_name}
+                          className="w-56 rounded-md border"
+                        />
+                      </div>
+                    )}
+                    {errors.logo && (
+                      <p className="text-sm text-red-500">
+                        {errors.logo}
+                      </p>
+                    )}
                   </div>
                 </TabsContent>
 

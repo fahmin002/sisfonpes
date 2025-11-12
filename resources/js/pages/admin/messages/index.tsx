@@ -13,8 +13,10 @@ import { Head, Link, router } from '@inertiajs/react'
 import { Eye, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { route } from 'ziggy-js'
+import SearchBar from '@/components/ui/search-bar'
+import PaginationLinks from '@/components/ui/pagination-links'
 
-export default function Index({ messages }) {
+export default function Index({ messages, filters }) {
   const breadcrumbs: BreadcrumbItem[] = [
     {
       title: 'Pesan Masuk',
@@ -34,6 +36,11 @@ export default function Index({ messages }) {
       <div className="p-4">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold">Pesan Masuk</h1>
+          <SearchBar
+            routeName='admin.messages.index'
+            placeholder='Cari Pesan...'
+            initialValue={filters?.search || ''}
+          />
         </div>
 
         <Card>
@@ -41,7 +48,7 @@ export default function Index({ messages }) {
             <CardTitle>Daftar Pesan</CardTitle>
           </CardHeader>
           <CardContent>
-            {messages.length > 0 ? (
+            {messages.data.length > 0 ? (
               <TooltipProvider>
                 <table className="w-full text-sm">
                   <thead>
@@ -54,7 +61,7 @@ export default function Index({ messages }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {messages.map((msg) => (
+                    {messages.data.map((msg) => (
                       <tr
                         key={msg.id}
                         className={cn(
@@ -106,6 +113,7 @@ export default function Index({ messages }) {
                     ))}
                   </tbody>
                 </table>
+                <PaginationLinks links={messages.links} />
               </TooltipProvider>
             ) : (
               <p className="text-sm text-muted-foreground">

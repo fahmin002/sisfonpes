@@ -55,12 +55,10 @@ class HandleInertiaRequests extends Middleware
             'flash_messages' => fn() => session('flash_messages') ?? [],
 
             // ✅ Shared menus (hanya di area admin)
-            'menus' => fn() => $request->is('admin/*')
-                ? Menu::with('page', 'parent')
+            'menus' => fn() => Menu::with('page', 'parent')
                 ->select('id', 'name', 'slug', 'url', 'page_id', 'parent_id', 'order', 'is_active')
                 ->orderBy('order')
-                ->get()
-                : [],
+                ->get(),
 
             // ✅ Shared pages (hanya di area admin juga)
             'pages' => fn() => $request->is('admin/*')
@@ -73,6 +71,12 @@ class HandleInertiaRequests extends Middleware
             // 🔹 Sidebar state (misal disimpan di cookie)
             'sidebarOpen' => ! $request->hasCookie('sidebar_state')
                 || $request->cookie('sidebar_state') === 'true',
+            
+            'announcements' => fn() => \App\Models\Announcement::where('is_active', true)
+                ->orderByDesc('created_at')
+                ->get(),
+
+            'settings' => fn() => \App\Models\Setting::pluck('value', 'key')->toArray(),
         ];
     }
 }

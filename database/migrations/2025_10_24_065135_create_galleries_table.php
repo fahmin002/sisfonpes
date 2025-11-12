@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
+            $table->boolean('is_hero');
             $table->timestamps();
         });
     }

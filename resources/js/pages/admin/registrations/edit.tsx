@@ -34,15 +34,15 @@ export default function Edit({ registration }) {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Edit Pendaftar" />
-      <div className="mx-auto w-full max-w-5xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
+      <div className="mx-auto w-full h-full bg-card p-6 shadow-sm">
+        <div className="mb-4 flex items-center max-w-2xl mx-auto justify-between">
           <h1 className="text-xl font-semibold">Edit Data Pendaftar</h1>
           <Link href="/admin/registrations">
             <Button variant="outline">Kembali</Button>
           </Link>
         </div>
 
-        <Card>
+        <Card className="mx-auto max-w-2xl">
           <CardHeader>
             <CardTitle>Form Edit Pendaftaran</CardTitle>
           </CardHeader>
@@ -103,7 +103,7 @@ export default function Edit({ registration }) {
                 <Input
                   value={data.previous_school}
                   onChange={(e) => setData("previous_school", e.target.value)}
-                    className="mt-2"
+                  className="mt-2"
                 />
               </div>
 
@@ -112,7 +112,7 @@ export default function Edit({ registration }) {
                 <Input
                   value={data.parent_name}
                   onChange={(e) => setData("parent_name", e.target.value)}
-                    className="mt-2"
+                  className="mt-2"
                 />
               </div>
 

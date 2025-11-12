@@ -23,6 +23,9 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
         content: '',
         add_to_menu: false,
         menu_parent_id: '',
+        is_info_link: false,
+        thumbnail: null as File | null,
+        excerpt: ''
     });
 
     const [showParentSelect, setShowParentSelect] = useState(false);
@@ -31,6 +34,16 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
         { title: 'Halaman Statis', href: '/admin/pages' },
         { title: 'Tambah Halaman', href: '/admin/pages/create' },
     ];
+
+    const handleNameSlugChange = (name: string) => {
+        setData('title', name);
+        const slug = name
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+        setData('slug', slug);
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,8 +56,8 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Halaman Statis" />
 
-            <div className="mx-auto w-full max-w-6xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between">
+            <div className="mx-auto w-full h-full bg-card p-6">
+                <div className="mb-4 max-w-2xl mx-auto flex items-center justify-between">
                     <h1 className="text-xl font-semibold">
                         Tambah Halaman Statis
                     </h1>
@@ -53,7 +66,7 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
                     </Link>
                 </div>
 
-                <Card>
+                <Card className='max-w-2xl mx-auto'>
                     <CardHeader>
                         <CardTitle>Form Halaman</CardTitle>
                     </CardHeader>
@@ -66,7 +79,7 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
                                     id="title"
                                     value={data.title}
                                     onChange={(e) =>
-                                        setData('title', e.target.value)
+                                        handleNameSlugChange(e.target.value)
                                     }
                                     placeholder="Judul halaman"
                                     className="mt-2"
@@ -84,15 +97,33 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
                                 <Input
                                     id="slug"
                                     value={data.slug}
-                                    onChange={(e) =>
-                                        setData('slug', e.target.value)
-                                    }
+                                    disabled
                                     placeholder="contoh: profil-pesantren"
                                     className="mt-2"
                                 />
                                 {errors.slug && (
                                     <p className="text-sm text-red-500">
                                         {errors.slug}
+                                    </p>
+                                )}
+                            </div>
+
+
+                            {/* Excrept */}
+                            <div>
+                                <Label htmlFor="excerpt">Kutipan</Label>
+                                <Input
+                                    id="excerpt"
+                                    value={data.excerpt}
+                                    placeholder="Kutipan Singkat Halaman Ini"
+                                    className="mt-2"
+                                    onChange={(e) => {
+                                        setData('excerpt', e.target.value)
+                                    }}
+                                />
+                                {errors.excerpt && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.excerpt}
                                     </p>
                                 )}
                             </div>
@@ -104,6 +135,42 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
                                 onChange={(html) => setData('content', html)}
                                 error={errors.content}
                             />
+                            {/* Thumbnail */}
+                            <div>
+                                <Label htmlFor="thumbnail">Thumbnail Halaman</Label>
+                                <Input
+                                    id="thumbnail"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) =>
+                                        setData(
+                                            'thumbnail',
+                                            e.target.files?.[0] ?? null,
+                                        )
+                                    }
+                                    className="mt-2"
+                                />
+                                {errors.thumbnail && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.thumbnail}
+                                    </p>
+                                )}
+                            </div>
+                            {/* Info Link */}
+                            <div className="flex items-center justify-between rounded-md border p-3">
+                                <div>
+                                    <Label htmlFor="is_info_link">Jadikan Info Link</Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        Tandai halaman ini agar muncul di bagian Info Links.
+                                    </p>
+                                </div>
+
+                                <Switch
+                                    id="is_info_link"
+                                    checked={Boolean(data.is_info_link)}
+                                    onCheckedChange={(val) => setData('is_info_link', val)}
+                                />
+                            </div>
 
                             {/* Tambahkan ke menu navigasi */}
                             <div className="flex items-center justify-between rounded-md border p-3">

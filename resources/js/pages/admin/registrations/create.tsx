@@ -34,15 +34,15 @@ export default function Create() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Pendaftar" />
-            <div className="mx-auto w-full max-w-6xl rounded-xl border border-border/50 bg-card p-6 shadow-sm">
-                <div className="mb-4 flex items-center justify-between">
+            <div className="mx-auto w-full h-full bg-card p-6 shadow-sm">
+                <div className="mb-4 flex items-center max-w-2xl mx-auto justify-between">
                     <h1 className="text-xl font-semibold">Tambah Pendaftar</h1>
                     <Link href="/admin/registrations">
                         <Button variant="outline">Kembali</Button>
                     </Link>
                 </div>
 
-                <Card>
+                <Card className="mx-auto max-w-2xl">
                     <CardHeader>
                         <CardTitle>Formulir Pendaftaran</CardTitle>
                     </CardHeader>

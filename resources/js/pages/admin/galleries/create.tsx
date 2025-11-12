@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { Switch } from '@/components/ui/switch';
 import { ImagePlus } from 'lucide-react';
 import { route } from 'ziggy-js';
 
@@ -27,6 +28,7 @@ export default function Create() {
         description: '',
         image: null as File | null,
         is_published: false,
+        is_hero: false
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -118,6 +120,21 @@ export default function Create() {
                                 )}
                             </div>
 
+
+                            <div className="flex items-center justify-between rounded-md border p-3">
+                                <div>
+                                    <Label htmlFor="is_hero">Jadikan Gambar Hero</Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        Tandai gambar ini agar muncul di halaman depan.
+                                    </p>
+                                </div>
+
+                                <Switch
+                                    id="is_hero"
+                                    checked={Boolean(data.is_hero)}
+                                    onCheckedChange={(val) => setData('is_hero', val)}
+                                />
+                            </div>
                             {/* Checkbox publikasi */}
                             <div className="flex items-center space-x-2">
                                 <Checkbox

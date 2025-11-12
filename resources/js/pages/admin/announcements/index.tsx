@@ -1,6 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import PaginationLinks from '@/components/ui/pagination-links';
+import SearchBar from '@/components/ui/search-bar';
 import {
     Tooltip,
     TooltipContent,
@@ -14,7 +16,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Edit2, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { route } from 'ziggy-js';
 
-export default function Index({ announcements }) {
+export default function Index({ announcements, filters }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Pengumuman',
@@ -39,11 +41,18 @@ export default function Index({ announcements }) {
             <div className="p-4">
                 <div className="mb-4 flex items-center justify-between">
                     <h1 className="text-xl font-semibold">Manajemen Pengumuman</h1>
-                    <Link href="/admin/announcements/create">
-                        <Button>
-                            <Plus className="mr-2 h-4 w-4" /> Tambah Pengumuman
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <SearchBar
+                            routeName='admin.announcements.index'
+                            placeholder='Cari Pengumuman...'
+                            initialValue={filters?.search || ''}
+                        />
+                        <Link href="/admin/announcements/create">
+                            <Button>
+                                <Plus className="mr-2 h-4 w-4" /> Tambah Pengumuman
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <Card>
@@ -51,7 +60,7 @@ export default function Index({ announcements }) {
                         <CardTitle>Daftar Pengumuman</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {announcements.length > 0 ? (
+                        {announcements.data.length > 0 ? (
                             <TooltipProvider>
                                 <table className="w-full text-sm">
                                     <thead>
@@ -64,7 +73,7 @@ export default function Index({ announcements }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {announcements.map((item) => (
+                                        {announcements.data.map((item) => (
                                             <tr
                                                 key={item.id}
                                                 className={cn(
@@ -162,6 +171,7 @@ export default function Index({ announcements }) {
                                         ))}
                                     </tbody>
                                 </table>
+                                <PaginationLinks links={announcements.links} />
                             </TooltipProvider>
                         ) : (
                             <p className="text-sm text-muted-foreground">

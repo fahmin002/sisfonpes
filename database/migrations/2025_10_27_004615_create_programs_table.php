@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
+            $table->string('short_description')->nullable();
             $table->longText('description');
             $table->string('image')->nullable();
-            $table->integer('order');
+            $table->string('icon')->nullable(); // opsional, buat tampilan ringkas
+            $table->integer('order')->default(1);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

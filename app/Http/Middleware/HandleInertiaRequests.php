@@ -54,18 +54,13 @@ class HandleInertiaRequests extends Middleware
             ],
             'flash_messages' => fn() => session('flash_messages') ?? [],
 
-            // ✅ Shared menus (hanya di area admin)
-            'menus' => fn() => Menu::with('page', 'parent')
-                ->select('id', 'name', 'slug', 'url', 'page_id', 'parent_id', 'order', 'is_active')
+            'menus' => fn() => Menu::select('id', 'name', 'slug', 'url', 'parent_id', 'order', 'is_active')
                 ->orderBy('order')
                 ->get(),
 
-            // ✅ Shared pages (hanya di area admin juga)
-            'pages' => fn() => $request->is('admin/*')
-                ? Page::select('id', 'title', 'slug', 'is_published', 'published_at')
+            'pages' => fn() => Page::select('id', 'title', 'slug', 'is_published', 'published_at')
                 ->orderByDesc('created_at')
-                ->get()
-                : [],
+                ->get(),
 
             
             // 🔹 Sidebar state (misal disimpan di cookie)

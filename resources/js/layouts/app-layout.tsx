@@ -72,7 +72,7 @@ export default function AppLayout({
   const currentUrl = window.location.pathname;
   useEffect(() => {
     initTheme();
-    autoSync(router, currentUrl);
+    // autoSync(router, currentUrl);
     // ✅ 1️⃣ Handle multiple flash messages
     if (Array.isArray(flash_messages) && flash_messages.length > 0) {
       flash_messages.forEach(({ type, message }) => showToast(type, message));

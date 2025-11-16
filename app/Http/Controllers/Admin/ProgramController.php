@@ -6,49 +6,58 @@ use App\Http\Controllers\Controller;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ProgramController extends Controller
 {
-    /**
-     * Tampilkan semua program.
-     */
     public function index(Request $request)
     {
         $query = Program::query();
 
-        if($search = $request->get('search')) {
-            $query->where('title', 'like', "%{$search}%")
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
+            });
         }
 
-        $programs = $query->orderBy('order')->paginate(10)->withQueryString();
+        $programs = $query
+            ->orderBy('order')
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('admin/programs/index', [
             'programs' => $programs,
-            'filters' => $request->only('search')
+            'filters' => $request->only('search'),
         ]);
     }
 
-    /**
-     * Form tambah program.
-     */
+
     public function create()
     {
         return Inertia::render('admin/programs/create');
     }
 
-    /**
-     * Simpan program baru.
-     */
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'short_description' => 'nullable|string|max:255',
             'description' => 'required|string',
-            'order' => 'required|integer|min:0',
+            'order' => 'nullable|integer|min:0',
             'image' => 'nullable|image|max:2048',
+            'icon' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
         ]);
+
+        $validated['description'] = $request->description;
+        // dd($validated['description']);
+
+        $validated['slug'] = Str::slug($validated['title']);
+        $validated['is_active'] = $request->boolean('is_active', true);
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('programs', 'public');
@@ -58,15 +67,10 @@ class ProgramController extends Controller
 
         return redirect()
             ->route('admin.programs.index')
-            ->with([
-                'message' => 'Program berhasil ditambahkan ✅',
-                'type' => 'success',
-            ]);
+            ->with(['message' => 'Program berhasil ditambahkan ✅', 'type' => 'success']);
     }
 
-    /**
-     * Form edit program.
-     */
+
     public function edit(Program $program)
     {
         return Inertia::render('admin/programs/edit', [
@@ -74,43 +78,51 @@ class ProgramController extends Controller
         ]);
     }
 
-    /**
-     * Update program.
-     */
+
     public function update(Request $request, Program $program)
     {
         $validated = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
-            'order' => 'sometimes|integer|min:0',
+            'title' => 'sometimes|required|string|max:255',
+            'short_description' => 'nullable|string|max:255',
+            'description' => 'sometimes|required|string',
+            'order' => 'nullable|integer|min:0',
             'image' => 'nullable|image|max:2048',
+            'icon' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
         ]);
 
+        if ($request->filled('title')) {
+            $validated['slug'] = Str::slug($validated['title']);
+        }
+
+        // handle image update
         if ($request->hasFile('image')) {
-            // Hapus gambar lama
             if ($program->image && Storage::disk('public')->exists($program->image)) {
                 Storage::disk('public')->delete($program->image);
             }
 
-            // Simpan gambar baru
             $validated['image'] = $request->file('image')->store('programs', 'public');
-        } else {
-            $validated['image'] = $program->image;
         }
 
         $program->update($validated);
 
         return redirect()
             ->route('admin.programs.index')
-            ->with([
-                'message' => 'Program berhasil diperbarui ✨',
-                'type' => 'success',
-            ]);
+            ->with(['message' => 'Program berhasil diperbarui ✨', 'type' => 'success']);
     }
 
-    /**
-     * Hapus program.
-     */
+
+    public function toggle(Program $program)
+    {
+        $program->update(['is_active' => !$program->is_active]);
+
+        return redirect()->back()->with([
+            'message' => 'Status "' . $program->title . '" berubah.',
+            'type' => 'info',
+        ]);
+    }
+
+
     public function destroy(Program $program)
     {
         if ($program->image && Storage::disk('public')->exists($program->image)) {
@@ -121,9 +133,6 @@ class ProgramController extends Controller
 
         return redirect()
             ->route('admin.programs.index')
-            ->with([
-                'message' => 'Program berhasil dihapus 🗑️',
-                'type' => 'warning',
-            ]);
+            ->with(['message' => 'Program berhasil dihapus 🗑️', 'type' => 'warning']);
     }
 }

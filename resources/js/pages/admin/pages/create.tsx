@@ -21,14 +21,14 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
         title: '',
         slug: '',
         content: '',
-        add_to_menu: false,
-        menu_parent_id: '',
+        // add_to_menu: false,
+        // menu_parent_id: '',
         is_info_link: false,
         thumbnail: null as File | null,
         excerpt: ''
     });
 
-    const [showParentSelect, setShowParentSelect] = useState(false);
+    // const [showParentSelect, setShowParentSelect] = useState(false);
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Halaman Statis', href: '/admin/pages' },
@@ -173,7 +173,7 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
                             </div>
 
                             {/* Tambahkan ke menu navigasi */}
-                            <div className="flex items-center justify-between rounded-md border p-3">
+                            {/* <div className="flex items-center justify-between rounded-md border p-3">
                                 <div>
                                     <Label htmlFor="add_to_menu">
                                         Tambahkan ke menu navigasi
@@ -191,10 +191,10 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
                                         setShowParentSelect(val);
                                     }}
                                 />
-                            </div>
+                            </div> */}
 
                             {/* Parent Menu (opsional) */}
-                            {showParentSelect && (
+                            {/* {showParentSelect && (
                                 <div>
                                     <Label htmlFor="menu_parent_id">
                                         Parent Menu (Opsional)
@@ -221,7 +221,7 @@ export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
                                         ))}
                                     </select>
                                 </div>
-                            )}
+                            )} */}
 
                             <Button type="submit" disabled={processing}>
                                 Simpan

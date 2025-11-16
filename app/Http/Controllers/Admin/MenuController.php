@@ -34,7 +34,6 @@ class MenuController extends Controller
                     $q->whereNull('parent_id'); // ambil level 1 (anak dari induk)
                 });
         })
-            ->whereNull('page_id') // opsional, biar cuma menu non-halaman statis
             ->get(['id', 'name', 'slug', 'parent_id']);
 
         return Inertia::render('admin/menus/create', ['parents' => $parents]);

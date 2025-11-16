@@ -69,9 +69,13 @@ Route::middleware(['auth', 'verified', 'admin'])
             ->name('posts.publish');
 
         Route::patch('/announcements/{announcement}/toggle', [AnnouncementController::class, 'toggle'])->name('announcements.toggle');
+        Route::patch('/programs/{program}/toggle', [ProgramController::class, 'toggle'])->name('programs.toggle');
 
         Route::patch('/pages/{page}/publish', [\App\Http\Controllers\Admin\PageController::class, 'publish'])->name('pages.publish');
         Route::patch('/pages/{page}/unpublish', [\App\Http\Controllers\Admin\PageController::class, 'unpublish'])->name('pages.unpublish');
+
+        Route::patch('/pages/{page}/link', [\App\Http\Controllers\Admin\PageController::class, 'infolink'])->name('pages.link');
+        Route::patch('/pages/{page}/unlink', [\App\Http\Controllers\Admin\PageController::class, 'infounlink'])->name('pages.unlink');
 
         Route::patch('galleries/{gallery}/publish', [GalleryController::class, 'publish'])->name('galleries.publish');
         Route::patch('galleries/{gallery}/unpublish', [GalleryController::class, 'unpublish'])->name('galleries.unpublish');

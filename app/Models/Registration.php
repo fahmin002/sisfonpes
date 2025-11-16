@@ -32,10 +32,21 @@ class Registration extends Model
             $registration->registration_code = 'PSB' . date('Y') . '-' . str_pad($nextId, 5, '0', STR_PAD_LEFT);
         });
     }
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::creating(function ($registration) {
+    //         $random = strtoupper(substr(md5(uniqid()), 0, 4));
+
+    //         $registration->registration_code = 'PSB' . date('Y') . '-' . $registration->id . $random;
+    //         $registration->save();
+    //     });
+    // }
+
 
     protected $casts = [
         'is_verified' => 'boolean',
         'birth_date' => 'date',
     ];
 }
-

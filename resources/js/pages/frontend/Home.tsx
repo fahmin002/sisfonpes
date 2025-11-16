@@ -4,17 +4,20 @@ import AnnouncementBar from "@/components/frontend/AnnouncementBar";
 import PostCard from "@/components/frontend/PostCard";
 import ProgramCard from "@/components/frontend/ProgramCard";
 import { Head, Link, usePage } from "@inertiajs/react";
+import HeroCarousel from "@/components/frontend/HeroCarousel";
 
 export default function Home({
   posts = [],
   programs = [],
   galleries = [],
   infoLinks = [],
+  heroImages = [],
 }: any) {
   const latestPosts = posts.slice(0, 3);
   const showcase = galleries.slice(0, 6);
   const infoCards = infoLinks.slice(0, 3); // tampilkan maksimal 3 info link
-  
+  const { props }: any = usePage();
+  const settings: Record<string, string> = props.settings || {};
   return (
     <FrontendLayout>
       <Head title="Beranda - Pondok Pesantren Darul Amin" />
@@ -47,13 +50,7 @@ export default function Home({
               </Link>
             </div>
           </div>
-          <div className="rounded-lg overflow-hidden shadow-lg">
-            <img
-              src="/images/hero-school.jpg"
-              alt="Pondok Pesantren Darul Amin"
-              className="w-full h-72 object-cover"
-            />
-          </div>
+          <HeroCarousel images={heroImages} />
         </div>
       </section>
 
@@ -74,28 +71,35 @@ export default function Home({
       </section>
 
       {/* Berita Terbaru */}
-      <section className="mb-12">
-        <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
-          Berita Terbaru
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          {latestPosts.length ? (
-            latestPosts.map((post: any) => <PostCard key={post.id} post={post} />)
-          ) : (
-            <div className="text-muted-foreground col-span-3 text-center">
-              Belum ada berita.
+      {settings.show_blog == '1' ? (
+        <>
+          <section className="mb-12">
+            <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
+              Berita Terbaru
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              {latestPosts.length ? (
+                latestPosts.map((post: any) => <PostCard key={post.id} post={post} />)
+              ) : (
+                <div className="text-muted-foreground col-span-3 text-center">
+                  Belum ada berita.
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <div className="mt-6 text-center">
-          <Link
-            href="/berita"
-            className="inline-block text-emerald-700 font-semibold hover:underline"
-          >
-            Lihat semua berita →
-          </Link>
-        </div>
-      </section>
+            <div className="mt-6 text-center">
+              <Link
+                href="/berita"
+                className="inline-block text-emerald-700 font-semibold hover:underline"
+              >
+                Lihat semua berita →
+              </Link>
+            </div>
+          </section>
+        </>
+      ) : (
+        <></>
+      )}
+
 
       {/* 🟩 Info Links Section */}
       {infoCards.length > 0 && (
@@ -135,39 +139,46 @@ export default function Home({
       )}
 
       {/* Galeri Pondok */}
-      <section className="mb-12">
-        <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
-          Galeri Pondok
-        </h3>
-        <div className="grid md:grid-cols-4 gap-4">
-          {showcase.length ? (
-            showcase.map((g: any) => (
-              <div
-                key={g.id}
-                className="rounded overflow-hidden border border-border/40 hover:shadow-md transition"
-              >
-                <img
-                  src={`/storage/${g.image}`}
-                  alt={g.title}
-                  className="w-full h-40 object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            ))
-          ) : (
-            <div className="text-muted-foreground col-span-4 text-center">
-              Belum ada foto galeri.
+      {settings.show_gallery == '1' ? (
+        <>
+          <section className="mb-12">
+            <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
+              Galeri Pondok
+            </h3>
+            <div className="grid md:grid-cols-4 gap-4">
+              {showcase.length ? (
+                showcase.map((g: any) => (
+                  <div
+                    key={g.id}
+                    className="rounded overflow-hidden border border-border/40 hover:shadow-md transition"
+                  >
+                    <img
+                      src={`/storage/${g.image}`}
+                      alt={g.title}
+                      className="w-full h-40 object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="text-muted-foreground col-span-4 text-center">
+                  Belum ada foto galeri.
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <div className="mt-6 text-center">
-          <Link
-            href="/galeri"
-            className="inline-block text-emerald-700 font-semibold hover:underline"
-          >
-            Lihat semua galeri →
-          </Link>
-        </div>
-      </section>
+            <div className="mt-6 text-center">
+              <Link
+                href="/galeri"
+                className="inline-block text-emerald-700 font-semibold hover:underline"
+              >
+                Lihat semua galeri →
+              </Link>
+            </div>
+          </section>
+        </>
+      ) : (
+        <></>
+      )}
+
 
       {/* Falsafah Pondok */}
       <section className="bg-emerald-50 py-16 rounded-lg border border-emerald-100">

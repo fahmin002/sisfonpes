@@ -21,6 +21,7 @@ class MenuSeeder extends Seeder
             ['name' => 'Berita dan Kegiatan', 'slug' => 'berita', 'url' => '/berita', 'order' => 4],
             ['name' => 'Galeri', 'slug' => 'galeri', 'url' => '/galeri', 'order' => 5],
             ['name' => 'Pendaftaran', 'slug' => 'pendaftaran', 'url' => '/pendaftaran', 'order' => 6],
+            ['name' => 'Cek Pendaftaran', 'slug' => 'cek-pendaftaran', 'url' => '/cek-pendaftaran', 'order' => 6],
             ['name' => 'Kontak & Alamat', 'slug' => 'kontak', 'url' => '/kontak', 'order' => 7],
             ['name' => 'Pengumuman', 'slug' => 'pengumuman', 'url' => '/pengumuman', 'order' => 8],
         ];

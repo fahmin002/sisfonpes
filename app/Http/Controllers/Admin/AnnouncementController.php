@@ -47,6 +47,13 @@ class AnnouncementController extends Controller
         ]);
     }
 
+    public function show(Announcement $announcement)
+    {
+        return Inertia::render('admin/announcements/show', [
+            'announcement' => $announcement,
+        ]);
+    }
+
     public function toggle(Announcement $announcement)
     {
         $announcement->update([

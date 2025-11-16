@@ -10,6 +10,7 @@ interface MenuItem {
   url: string;
   parent_id: number | null;
   children?: MenuItem[];
+  is_active: boolean | number | string;
 }
 
 /** 🔧 Build menu tree (induk → anak → cucu) */
@@ -18,8 +19,10 @@ function buildMenuTree(menus: MenuItem[]) {
   menus.forEach((m) => map.set(m.id, { ...m, children: [] }));
 
   const roots: MenuItem[] = [];
+
   menus.forEach((m) => {
     const item = map.get(m.id)!;
+
     if (m.parent_id) {
       const parent = map.get(m.parent_id);
       if (parent) parent.children?.push(item);
@@ -27,11 +30,22 @@ function buildMenuTree(menus: MenuItem[]) {
       roots.push(item);
     }
   });
+
   return roots;
 }
 
-export default function Navbar({settings, menus}) {
-  const menuTree = buildMenuTree(menus);
+/** ✅ Hanya ambil menu yang aktif */
+export function getActiveMenuTree(menus: MenuItem[]) {
+  const activeMenus = menus.filter(
+    (m) => m.is_active === 1 || m.is_active === "1" || m.is_active === true
+  );
+
+  return buildMenuTree(activeMenus);
+}
+
+
+export default function Navbar({ settings, menus }) {
+  const menuTree = getActiveMenuTree(menus);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);

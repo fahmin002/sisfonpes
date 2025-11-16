@@ -42,7 +42,7 @@ class SettingSeeder extends Seeder
             ['key' => 'show_announcements', 'value' => 'true'],
             ['key' => 'show_gallery', 'value' => 'true'],
             ['key' => 'show_blog', 'value' => 'true'],
-            ['key' => 'maintenance_mode', 'value' => 'false'],
+            ['key' => 'maintenance_mode', 'value' => 'true'],
             ['key' => 'maintenance_message', 'value' => 'Situs sedang dalam pemeliharaan. Silakan kembali lagi nanti.'],
             ['key' => 'falsafah_panca_jiwa', 'value' => 'Keikhlasan, Kesederhanaan, Kemandirian, Ukhuwah Islamiyah, Kebebasan'],
             ['key' => 'falsafah_moto', 'value' => 'Berbudi tinggi, berbadan sehat, berpengetahuan luas, berpikiran bebas'],

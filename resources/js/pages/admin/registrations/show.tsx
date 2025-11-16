@@ -34,7 +34,7 @@ export default function Show() {
 
     return (
         <>
-            <Head title={`Detail Pendaftar - ${registration.name}`} />
+            <Head title={`Detail Pendaftar - ${registration.full_name}`} />
 
             <div className="container max-w-4xl mx-auto py-10 space-y-6">
                 {/* Header */}
@@ -57,7 +57,7 @@ export default function Show() {
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div>
-                                <CardTitle>{registration.name}</CardTitle>
+                                <CardTitle>{registration.full_name}</CardTitle>
                                 <CardDescription>
                                     Kode Pendaftaran:{" "}
                                     <span className="font-mono text-sm">
@@ -73,39 +73,48 @@ export default function Show() {
                         <div className="grid md:grid-cols-2 gap-6">
                             <div>
                                 <h3 className="font-semibold mb-2">Informasi Pribadi</h3>
-                                <dl className="text-sm space-y-1">
+                                <dl className="text-sm space-y-1 flex flex-col gap-2">
                                     <div>
-                                        <dt className="font-medium">Nama Lengkap</dt>
-                                        <dd>{registration.name}</dd>
+                                        <dt className="font-semibold">Nama Lengkap</dt>
+                                        <dd>{registration.full_name}</dd>
                                     </div>
+
                                     <div>
-                                        <dt className="font-medium">Email</dt>
-                                        <dd>{registration.email ?? "-"}</dd>
+                                        <dt className="font-semibold">Jenis Kelamin</dt>
+                                        <dd>
+                                            {registration.gender === "male"
+                                                ? "Laki-laki"
+                                                : registration.gender === "female"
+                                                    ? "Perempuan"
+                                                    : "-"}
+                                        </dd>
                                     </div>
+
                                     <div>
-                                        <dt className="font-medium">Nomor Telepon</dt>
-                                        <dd>{registration.phone ?? "-"}</dd>
+                                        <dt className="font-semibold">Tempat Lahir</dt>
+                                        <dd>{registration.birth_place ?? "-"}</dd>
                                     </div>
+
                                     <div>
-                                        <dt className="font-medium">Tanggal Lahir</dt>
-                                        <dd>{registration.birth_date ?? "-"}</dd>
+                                        <dt className="font-semibold">Tanggal Lahir</dt>
+                                        <dd>
+                                            {registration.birth_date
+                                                ? new Date(registration.birth_date).toLocaleDateString("id-ID")
+                                                : "-"}
+                                        </dd>
                                     </div>
                                 </dl>
                             </div>
 
                             <div>
                                 <h3 className="font-semibold mb-2">Data Orang Tua</h3>
-                                <dl className="text-sm space-y-1">
+                                <dl className="text-sm space-y-1 flex flex-col gap-2">
                                     <div>
-                                        <dt className="font-medium">Nama Ayah</dt>
-                                        <dd>{registration.father_name ?? "-"}</dd>
+                                        <dt className="font-semibold">Nama Orang Tua/Wali</dt>
+                                        <dd>{registration.parent_name ?? "-"}</dd>
                                     </div>
                                     <div>
-                                        <dt className="font-medium">Nama Ibu</dt>
-                                        <dd>{registration.mother_name ?? "-"}</dd>
-                                    </div>
-                                    <div>
-                                        <dt className="font-medium">Nomor Kontak Orang Tua</dt>
+                                        <dt className="font-semibold">Nomor Kontak Orang Tua</dt>
                                         <dd>{registration.parent_contact ?? "-"}</dd>
                                     </div>
                                 </dl>
@@ -116,13 +125,13 @@ export default function Show() {
 
                         <div>
                             <h3 className="font-semibold mb-2">Alamat & Sekolah Asal</h3>
-                            <dl className="text-sm space-y-1">
+                            <dl className="text-sm space-y-1 flex-col flex gap-2">
                                 <div>
-                                    <dt className="font-medium">Alamat</dt>
+                                    <dt className="font-semibold">Alamat</dt>
                                     <dd>{registration.address ?? "-"}</dd>
                                 </div>
                                 <div>
-                                    <dt className="font-medium">Sekolah Asal</dt>
+                                    <dt className="font-semibold">Sekolah Asal</dt>
                                     <dd>{registration.previous_school ?? "-"}</dd>
                                 </div>
                             </dl>

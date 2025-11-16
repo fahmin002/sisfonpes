@@ -37,9 +37,14 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call([
-            SettingSeeder::class,
+            AnnouncementSeeder::class,
             MenuSeeder::class,
+            MessageSeeder::class,
+            PageSeeder::class,
             PostSeeder::class,
+            ProgramSeeder::class,
+            RegistrationSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

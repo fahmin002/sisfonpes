@@ -19,11 +19,11 @@ Schema::create('menus', function (Blueprint $table) {
             $table->unsignedBigInteger('parent_id')->nullable(); // untuk submenu
             $table->integer('order')->default(0); // urutan tampil
             $table->boolean('is_active')->default(true); // aktif atau tidak
-            $table->foreignId('page_id')->nullable()->constrained('pages')->onDelete('set null');
+            // $table->foreignId('page_id')->nullable()->constrained('pages')->onDelete('set null');
             $table->timestamps();
 
             // Relasi ke parent menu
-            $table->foreign('parent_id')->references('id')->on('menus')->onDelete('cascade');
+            // $table->foreign('parent_id')->references('id')->on('menus')->onDelete('cascade');
         });
     }
 

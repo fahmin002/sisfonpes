@@ -66,7 +66,7 @@ export default function Index({ announcements, filters }) {
                                     <thead>
                                         <tr className="border-b">
                                             <th className="py-2 text-left">Judul</th>
-                                            <th className="py-2 text-left">Isi</th>
+                                            <th className="py-2 text-left">Detail</th>
                                             <th className="py-2 text-left">Status</th>
                                             <th className="py-2 text-left">Tanggal</th>
                                             <th className="py-2 text-right">Aksi</th>
@@ -81,8 +81,17 @@ export default function Index({ announcements, filters }) {
                                                 )}
                                             >
                                                 <td className="py-2">{item.title}</td>
-                                                <td className="py-2 text-muted-foreground line-clamp-1">
+                                                {/* <td className="py-2 text-muted-foreground line-clamp-1">
                                                     {item.content}
+                                                </td> */}
+                                                <td className="py-2 text-muted-foreground line-clamp-1">
+                                                    <Link
+                                                        href={route("admin.announcements.show", item.id)}
+                                                        className="text-emerald-600 underline"
+                                                    >
+                                                        <Eye className="inline-block mr-1 h-4 w-4" />
+                                                        Lihat Detail
+                                                    </Link>
                                                 </td>
                                                 <td className="py-2">
                                                     <Badge

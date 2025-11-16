@@ -46,7 +46,17 @@ export default function Settings({ settings = {} }) {
     window.location.reload();
     toast.info('Sinkronisasi selesai 🔄');
   };
-
+  const [preview, setPreview] = useState<string | null>(null);
+  const handleLogoChange = (file: File | null) => {
+    setData("logo", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null);
+    }
+  };
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Pengaturan Umum" />
@@ -138,21 +148,20 @@ export default function Settings({ settings = {} }) {
                       type="file"
                       accept="image/*"
                       onChange={(e) =>
-                        setData(
-                          'logo',
-                          e.target.files?.[0] ?? null,
+                        handleLogoChange(
+                          e.target.files?.[0] ?? null
                         )
                       }
                       className="mt-2"
                     />
 
-                    {settings.logo && (
+                    {(preview || settings.logo) && (
                       <div className="mt-3">
                         <p className="mb-1 text-sm text-muted-foreground">
                           Logo saat ini:
                         </p>
                         <img
-                          src={`/storage/${settings.logo}`}
+                          src={preview || `/storage/${settings.logo}`}
                           alt={settings.site_name}
                           className="w-56 rounded-md border"
                         />

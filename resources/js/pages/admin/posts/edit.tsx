@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 interface EditProps {
     post: {
         id: number;
@@ -26,6 +27,8 @@ export default function Edit({ post }: EditProps) {
             href: '/admin/posts/edit',
         },
     ];
+
+    const [preview, setPreview] = useState<string | null>(null)
     const {
         data,
         setData,
@@ -38,6 +41,18 @@ export default function Edit({ post }: EditProps) {
         content: post.content || '',
         thumbnail: null as File | null,
     });
+
+    
+    const handleThumbnailChange = (file: File | null) => {
+        setData("thumbnail", file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => setPreview(reader.result as string);
+            reader.readAsDataURL(file);
+        } else {
+            setPreview(null);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -98,20 +113,19 @@ export default function Edit({ post }: EditProps) {
                                     id="thumbnail"
                                     type="file"
                                     onChange={(e) =>
-                                        setData(
-                                            'thumbnail',
-                                            e.target.files?.[0] ?? null,
+                                        handleThumbnailChange(
+                                            e.target.files?.[0] ?? null
                                         )
                                     }
                                     className="mt-2"
                                 />
-                                {post.thumbnail && (
+                                {(preview || post.thumbnail) && (
                                     <div className="mt-2">
                                         <p className="mb-1 text-sm text-muted-foreground">
                                             Thumbnail saat ini:
                                         </p>
                                         <img
-                                            src={`/storage/${post.thumbnail}`}
+                                            src={preview || `/storage/${post.thumbnail}`}
                                             alt="Thumbnail lama"
                                             className="h-24 rounded-md border"
                                         />

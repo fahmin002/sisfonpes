@@ -21,7 +21,7 @@ interface Page {
   title: string;
   slug: string;
   content: string;
-  menu?: { id: number; parent_id?: number | null } | null;
+  // menu?: { id: number; parent_id?: number | null } | null;
   is_info_link: boolean | string;
   thumbnail: string | null;
   excerpt: string;
@@ -41,15 +41,15 @@ export default function Edit({
     title: page.title || '',
     slug: page.slug || '',
     content: page.content || '',
-    add_to_menu: Boolean(is_in_menu),
-    menu_parent_id: menu_parent_id || '',
+    // add_to_menu: Boolean(is_in_menu),
+    // menu_parent_id: menu_parent_id || '',
     is_info_link: page.is_info_link === '0' ? false : Boolean(page.is_info_link),
     thumbnail: null as File | null,
     excerpt: page.excerpt || '',
   });
 
-  const isAlreadyInMenu = page.menu !== null;
-  const [showParentSelect, setShowParentSelect] = useState(data.add_to_menu);
+  // const isAlreadyInMenu = page.menu !== null;
+  // const [showParentSelect, setShowParentSelect] = useState(data.add_to_menu);
 
   const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Halaman Statis', href: '/admin/pages' },
@@ -77,12 +77,12 @@ export default function Edit({
     formData.append('slug', data.slug.trim());
     formData.append('content', data.content || '');
     formData.append('excerpt', data.excerpt || '');
-    formData.append('add_to_menu', data.add_to_menu ? '1' : '0');
+    // formData.append('add_to_menu', data.add_to_menu ? '1' : '0');
     formData.append('is_info_link', data.is_info_link ? '1' : '0');
 
-    if (data.menu_parent_id) {
-      formData.append('menu_parent_id', String(data.menu_parent_id));
-    }
+    // if (data.menu_parent_id) {
+    //   formData.append('menu_parent_id', String(data.menu_parent_id));
+    // }
 
     if (data.thumbnail instanceof File) {
       formData.append('thumbnail', data.thumbnail);
@@ -97,9 +97,22 @@ export default function Edit({
     });
   };
 
-  useEffect(() => {
-    setShowParentSelect(data.add_to_menu);
-  }, [data.add_to_menu]);
+  const [preview, setPreview] = useState<string | null>(null);
+  const handleThumbnailChange = (file: File | null) => {
+    setData("thumbnail", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null);
+    }
+  };
+
+
+  // useEffect(() => {
+  //   setShowParentSelect(data.add_to_menu);
+  // }, [data.add_to_menu]);
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -180,17 +193,17 @@ export default function Edit({
                   type="file"
                   accept="image/*"
                   onChange={(e) =>
-                    setData('thumbnail', e.target.files?.[0] ?? null)
+                    handleThumbnailChange(e.target.files?.[0] ?? null)
                   }
                   className="mt-2"
                 />
-                {page.thumbnail && (
+                {(preview || page.thumbnail) && (
                   <div className="mt-3">
                     <p className="mb-1 text-sm text-muted-foreground">
                       Gambar saat ini:
                     </p>
                     <img
-                      src={`/storage/${page.thumbnail}`}
+                      src={preview || `/storage/${page.thumbnail}`}
                       alt={page.title}
                       className="w-56 rounded-md border"
                     />
@@ -218,7 +231,7 @@ export default function Edit({
               </div>
 
               {/* Tambahkan ke menu navigasi */}
-              <div className="flex items-center justify-between rounded-md border p-3">
+              {/* <div className="flex items-center justify-between rounded-md border p-3">
                 <div>
                   <Label htmlFor="add_to_menu">Tambahkan ke menu navigasi</Label>
                   <p className="text-xs text-muted-foreground">
@@ -237,10 +250,10 @@ export default function Edit({
                     setShowParentSelect(val);
                   }}
                 />
-              </div>
+              </div> */}
 
               {/* Parent Menu */}
-              {showParentSelect && (
+              {/* {showParentSelect && (
                 <div>
                   <Label htmlFor="menu_parent_id">Parent Menu (Opsional)</Label>
                   <select
@@ -257,7 +270,7 @@ export default function Edit({
                     ))}
                   </select>
                 </div>
-              )}
+              )} */}
 
               <Button type="submit" disabled={processing}>
                 Perbarui

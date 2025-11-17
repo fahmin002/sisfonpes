@@ -52,11 +52,11 @@ class PageController extends Controller
 
     public function create()
     {
-        $parents = \App\Models\Menu::whereNull('parent_id')
-            ->whereNull('page_id')
-            ->where('is_active', true)
-            ->get(['id', 'name', 'slug']);
-        return Inertia::render('admin/pages/create', ['parents' => $parents]);
+        // $parents = \App\Models\Menu::whereNull('parent_id')
+        //     ->whereNull('page_id')
+        //     ->where('is_active', true)
+        //     ->get(['id', 'name', 'slug']);
+        return Inertia::render('admin/pages/create');
     }
 
 

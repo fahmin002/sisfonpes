@@ -21,7 +21,12 @@ Route::get('/cek-pendaftaran/{code}', [FrontendController::class, 'checkRegistra
 Route::get('/kontak', [FrontendController::class, 'pageContact']);
 Route::get('/pengumuman', [FrontendController::class, 'announcementsIndex']);
 Route::get('/pengumuman/{id}', [FrontendController::class, 'announcementShow']);
-
+Route::get('/kontak', function () {
+    return Inertia::render('frontend/contact/index');
+})->name('contact.index');
+Route::post('/kontak/kirim-pesan', [FrontendController::class, 'sendMessage']);
+Route::get('/info', [FrontendController::class, 'infoLinks'])->name('info.index');
+Route::get('/info/{slug}', [FrontendController::class, 'showInfo'])->name('info.show');
 
 Route::get('/welcome', function () {
     return Inertia::render('welcome', [

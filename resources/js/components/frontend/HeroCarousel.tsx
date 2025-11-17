@@ -41,7 +41,7 @@ export default function HeroCarousel({ images = [], autoplay = true, interval = 
 
   return (
     <section
-      className="relative w-full max-w-full mx-auto"
+      className="relative w-full max-w-full mx-auto z-0"
       onMouseEnter={pause}
       onMouseLeave={resume}
       onTouchStart={onTouchStart}
@@ -62,11 +62,11 @@ export default function HeroCarousel({ images = [], autoplay = true, interval = 
               className="w-full h-full object-cover"
               loading="lazy"
             />
-            {img.description && (
+            {/* {img.description && (
               <div className="absolute left-4 bottom-4 bg-black/40 backdrop-blur-sm text-white px-3 py-2 rounded-md max-w-xl">
                 <p className="text-sm sm:text-base">{img.description}</p>
               </div>
-            )}
+            )} */}
           </div>
         ))}
       </div>

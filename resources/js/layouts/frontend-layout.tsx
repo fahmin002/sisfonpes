@@ -21,30 +21,44 @@ interface MenuItem {
 }
 
 export default function FrontendLayout({ children, title, description }: FrontendLayoutProps) {
-  const { props } = usePage();
+  const { props, url } = usePage();
   const settings: Record<string, string> = props.settings || {};
   const menus: MenuItem[] = props.menus || [];
+  const isAnnouncementPage = url.startsWith("/pengumuman");
 
   // props.menus is expected via HandleInertiaRequests share
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <AnnouncementBar settings={settings} />
-      <Navbar settings={settings} menus={menus} />
+      {!isAnnouncementPage && <AnnouncementBar />}
+      <Navbar menus={menus} />
       <main className="flex-1 container mx-auto px-4 md:px-6 lg:px-8 py-8">
-        {title && (
+        {/* {title && (
           <header className="mb-6 text-center">
             <h1 className="text-2xl md:text-3xl font-semibold">{title}</h1>
             {description && <p className="text-muted-foreground mt-2">{description}</p>}
           </header>
-        )}
+        )} */}
 
         <div className="max-w-7xl mx-auto w-full">{children}</div>
+        <Toaster
+          position="top-right"
+          closeButton
+          expand={false}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              borderRadius: '0.75rem',
+              padding: '0.75rem 1rem',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.08)',
+            },
+          }}
+        />
       </main>
 
-      <Footer settings={settings} />
+      <Footer />
 
       {/* global toaster */}
-      <Toaster position="top-right" richColors />
+      {/* <Toaster position="top-right" richColors /> */}
     </div>
   );
 }

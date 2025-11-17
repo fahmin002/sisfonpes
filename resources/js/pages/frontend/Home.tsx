@@ -1,219 +1,185 @@
-// resources/js/pages/frontend/Home.tsx
 import FrontendLayout from "@/layouts/frontend-layout";
-import AnnouncementBar from "@/components/frontend/AnnouncementBar";
-import PostCard from "@/components/frontend/PostCard";
-import ProgramCard from "@/components/frontend/ProgramCard";
 import { Head, Link, usePage } from "@inertiajs/react";
 import HeroCarousel from "@/components/frontend/HeroCarousel";
+import ProgramCard from "@/components/frontend/ProgramCard";
+import PostCard from "@/components/frontend/PostCard";
+import { motion } from "framer-motion";
 
-export default function Home({
-  posts = [],
-  programs = [],
-  galleries = [],
-  infoLinks = [],
-  heroImages = [],
-}: any) {
+export default function Home({ posts = [], programs = [], galleries = [], infoLinks = [], heroImages = [] }: any) {
   const latestPosts = posts.slice(0, 3);
   const showcase = galleries.slice(0, 6);
-  const infoCards = infoLinks.slice(0, 3); // tampilkan maksimal 3 info link
+  const infoCards = infoLinks.slice(0, 3);
   const { props }: any = usePage();
   const settings: Record<string, string> = props.settings || {};
+
   return (
     <FrontendLayout>
       <Head title="Beranda - Pondok Pesantren Darul Amin" />
 
-      {/* Announcement Bar */}
-      {/* <AnnouncementBar message="Selamat datang di Website Resmi Pondok Pesantren Darul Amin — Pendaftaran Santri Baru 2025 telah dibuka!" /> */}
+      {/* HERO SECTION */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="container mx-auto relative overflow-hidden rounded-2xl shadow-xl mb-14"
+      >
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-emerald-700 via-emerald-800 to-emerald-900 text-white mb-12">
-        <div className="relative z-10 grid md:grid-cols-2 gap-8 items-center p-10">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
-              Selamat Datang di Pondok Pesantren <br />
+        {/* Overlay untuk readability */}
+        <div className="absolute inset-0 z-10">
+          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
+        </div>
+
+        <HeroCarousel images={heroImages} />
+        <div className="absolute inset-0 z-20 flex items-center px-10 md:px-20">
+          <div className="max-w-2xl text-white">
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-xl">
+              Pondok Pesantren
+              <br />
               <span className="text-emerald-200">Darul Amin</span>
-            </h2>
-            <p className="text-emerald-100 max-w-xl leading-relaxed mb-6">
-              Lembaga pendidikan Islam yang menanamkan nilai keikhlasan, kesederhanaan, kemandirian, ukhuwah Islamiyah,
-              dan kebebasan berpikir untuk melahirkan generasi berjiwa Qur'ani dan berwawasan modern.
+            </h1>
+
+            <p className="mt-4 text-lg md:text-xl text-emerald-100 leading-relaxed drop-shadow-xl">
+              Mencetak generasi muslim yang berakhlak mulia, berilmu luas, dan siap menghadapi tantangan zaman.
             </p>
-            <div className="flex gap-3">
-              <Link href="/pendaftaran">
-                <button className="bg-white text-emerald-800 px-5 py-2 rounded font-semibold shadow hover:bg-emerald-100 transition">
-                  Daftar Sekarang
-                </button>
+
+            <div className="mt-6 flex gap-4">
+              <Link
+                href="/pendaftaran"
+                className="bg-white text-emerald-900 px-6 py-3 rounded-xl font-semibold shadow hover:bg-emerald-100 transition"
+              >
+                Daftar Sekarang
               </Link>
-              <Link href="/tentang">
-                <button className="border border-white text-white px-5 py-2 rounded font-semibold hover:bg-white hover:text-emerald-800 transition">
-                  Tentang Kami
-                </button>
+
+              <Link
+                href="/tentang"
+                className="border border-white text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition backdrop-blur-sm"
+              >
+                Tentang Kami
               </Link>
             </div>
           </div>
-          <HeroCarousel images={heroImages} />
         </div>
-      </section>
 
-      {/* Program Pendidikan */}
-      <section className="mb-12">
-        <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
+      </motion.section>
+
+      {/* PROGRAM */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-emerald-900 mb-8 border-b pb-3 border-emerald-200">
           Program Pendidikan
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          {programs.length ? (
-            programs.map((p: any) => <ProgramCard key={p.id} program={p} />)
-          ) : (
-            <div className="text-muted-foreground col-span-3 text-center">
-              Belum ada program terdaftar.
-            </div>
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {programs.length ? programs.map((p: any) => <ProgramCard key={p.id} program={p} />) : (
+            <div className="text-muted-foreground col-span-3 text-center">Belum ada program.</div>
           )}
         </div>
+        <div className="mt-6 text-center">
+          <Link href="/program-pendidikan" className="text-emerald-700 font-semibold hover:underline">
+            Lihat semua Program Pendidikan →
+          </Link>
+        </div>
       </section>
 
-      {/* Berita Terbaru */}
-      {settings.show_blog == '1' ? (
-        <>
-          <section className="mb-12">
-            <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
-              Berita Terbaru
-            </h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {latestPosts.length ? (
-                latestPosts.map((post: any) => <PostCard key={post.id} post={post} />)
-              ) : (
-                <div className="text-muted-foreground col-span-3 text-center">
-                  Belum ada berita.
-                </div>
-              )}
-            </div>
-            <div className="mt-6 text-center">
-              <Link
-                href="/berita"
-                className="inline-block text-emerald-700 font-semibold hover:underline"
-              >
-                Lihat semua berita →
-              </Link>
-            </div>
-          </section>
-        </>
-      ) : (
-        <></>
-      )}
-
-
-      {/* 🟩 Info Links Section */}
-      {infoCards.length > 0 && (
-        <section className="info-links mb-16">
-          <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
-            Informasi Penting
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            {infoCards.map((info: any) => (
-              <Link
-                key={info.id}
-                href={`/${info.slug}`}
-                className="relative rounded-lg overflow-hidden group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition group-hover:from-black/80" />
-                <img
-                  src={
-                    info.thumbnail
-                      ? `/storage/${info.thumbnail}`
-                      : "/images/default-thumbnail.jpg"
-                  }
-                  alt={info.title}
-                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute bottom-4 left-4 right-4 text-white z-10">
-                  <h4 className="text-lg font-semibold mb-1">{info.title}</h4>
-                  {info.excerpt && (
-                    <p className="text-sm text-gray-200 line-clamp-2">
-                      {info.excerpt}
-                    </p>
-                  )}
-                </div>
-              </Link>
-            ))}
+      {/* BERITA */}
+      {settings.show_blog === "1" && (
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-emerald-900 mb-8 border-b pb-3 border-emerald-200">
+            Berita Terbaru
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {latestPosts.length ? latestPosts.map((post: any) => <PostCard key={post.id} post={post} />) : (
+              <div className="text-muted-foreground col-span-3 text-center">Belum ada berita.</div>
+            )}
+          </div>
+          <div className="mt-6 text-center">
+            <Link href="/berita" className="text-emerald-700 font-semibold hover:underline">
+              Lihat semua berita →
+            </Link>
           </div>
         </section>
       )}
 
-      {/* Galeri Pondok */}
-      {settings.show_gallery == '1' ? (
-        <>
-          <section className="mb-12">
-            <h3 className="text-2xl font-bold mb-6 text-emerald-800 border-b pb-2 border-emerald-200">
-              Galeri Pondok
-            </h3>
-            <div className="grid md:grid-cols-4 gap-4">
-              {showcase.length ? (
-                showcase.map((g: any) => (
-                  <div
-                    key={g.id}
-                    className="rounded overflow-hidden border border-border/40 hover:shadow-md transition"
-                  >
-                    <img
-                      src={`/storage/${g.image}`}
-                      alt={g.title}
-                      className="w-full h-40 object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="text-muted-foreground col-span-4 text-center">
-                  Belum ada foto galeri.
-                </div>
-              )}
-            </div>
-            <div className="mt-6 text-center">
-              <Link
-                href="/galeri"
-                className="inline-block text-emerald-700 font-semibold hover:underline"
-              >
-                Lihat semua galeri →
-              </Link>
-            </div>
-          </section>
-        </>
-      ) : (
-        <></>
-      )}
-
-
-      {/* Falsafah Pondok */}
-      <section className="bg-emerald-50 py-16 rounded-lg border border-emerald-100">
-        <div className="max-w-6xl mx-auto text-center px-6">
-          <h2 className="text-3xl font-bold text-emerald-900 mb-8">
-            Falsafah Pondok
+      {/* INFO LINKS */}
+      {infoCards.length > 0 && (
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-emerald-900 mb-8 border-b pb-3 border-emerald-200">
+            Informasi Penting
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition">
-              <div className="text-emerald-600 text-4xl mb-3">
-                <i className="fa-solid fa-heart-pulse"></i>
+            {infoCards.map((info: any) => (
+              <Link key={info.id} href={`/info/${info.slug}`} className="group relative rounded-2xl overflow-hidden shadow hover:shadow-lg transition">
+                <img
+                  src={info.thumbnail ? `/storage/${info.thumbnail}` : "/images/default-thumbnail.jpg"}
+                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <h4 className="text-lg font-semibold mb-1">{info.title}</h4>
+                  {info.excerpt && <p className="text-sm text-gray-200 line-clamp-2">{info.excerpt}</p>}
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-6 text-center">
+            <Link href="/info" className="text-emerald-700 font-semibold hover:underline">
+              Lihat semua Info →
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* GALERI */}
+      {settings.show_gallery === "1" && (
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-emerald-900 mb-8 border-b pb-3 border-emerald-200">
+            Galeri Pondok
+          </h2>
+          <div className="grid md:grid-cols-4 gap-5">
+            {showcase.length ? showcase.map((g: any) => (
+              <div key={g.id} className="rounded-xl overflow-hidden shadow border hover:shadow-lg transition">
+                <img
+                  src={`/storage/${g.image}`}
+                  className="w-full h-40 object-cover hover:scale-105 transition-transform duration-300"
+                />
               </div>
-              <h3 className="text-lg font-bold mb-2">Panca Jiwa</h3>
-              <p className="text-gray-600 text-sm">
-                Keikhlasan, Kesederhanaan, Kemandirian, Ukhuwah Islamiyah, dan Kebebasan.
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition">
-              <div className="text-emerald-600 text-4xl mb-3">
-                <i className="fa-solid fa-arrow-trend-up"></i>
+            )) : (
+              <div className="text-muted-foreground col-span-4 text-center">Belum ada foto.</div>
+            )}
+          </div>
+          <div className="mt-6 text-center">
+            <Link href="/galeri" className="text-emerald-700 font-semibold hover:underline">
+              Lihat semua galeri →
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* FALSAFAH */}
+      <section className="bg-emerald-50 py-20 rounded-2xl border border-emerald-100 shadow-inner">
+        <div className="max-w-6xl mx-auto text-center px-6">
+          <h2 className="text-3xl font-bold text-emerald-900 mb-10">Falsafah Pondok</h2>
+          <div className="grid md:grid-cols-3 gap-10">
+            {[{
+              icon: "fa-heart-pulse",
+              title: "Panca Jiwa",
+              desc: "Keikhlasan, kesederhanaan, kemandirian, ukhuwah, dan kebebasan."
+            }, {
+              icon: "fa-arrow-trend-up",
+              title: "Moto",
+              desc: "Berbudi tinggi, berbadan sehat, berpengetahuan luas, berpikiran bebas."
+            }, {
+              icon: "fa-binoculars",
+              title: "Panca Jangka",
+              desc: "Arah pembangunan pondok: pendidikan, kaderisasi, sarana, dana, kesejahteraan."
+            }].map((item, i) => (
+              <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border hover:shadow-md transition">
+                <div className="text-emerald-600 text-5xl mb-4">
+                  <i className={`fa-solid ${item.icon}`}></i>
+                </div>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
               </div>
-              <h3 className="text-lg font-bold mb-2">Moto</h3>
-              <p className="text-gray-600 text-sm">
-                Berbudi tinggi, berbadan sehat, berpengetahuan luas, dan berpikiran bebas.
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition">
-              <div className="text-emerald-600 text-4xl mb-3">
-                <i className="fa-solid fa-binoculars"></i>
-              </div>
-              <h3 className="text-lg font-bold mb-2">Panca Jangka</h3>
-              <p className="text-gray-600 text-sm">
-                Panca Jangka sebagai arah pembangunan Pondok: pendidikan, kaderisasi, sarana, dana, dan kesejahteraan.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>

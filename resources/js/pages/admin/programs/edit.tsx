@@ -141,6 +141,11 @@ export default function Edit({ program }: { program: Program }) {
                                     disabled
                                     className="mt-2"
                                 />
+                                {errors.slug && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.slug}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Deskripsi Singkat */}

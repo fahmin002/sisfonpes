@@ -3,7 +3,9 @@ import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Link, usePage } from "@inertiajs/react"
 
-export default function Footer({ settings }) {
+export default function Footer() {
+  const { props } = usePage();
+  const settings: Record<string, string> = props.settings || {};
   const [showScrollTop, setShowScrollTop] = useState(false)
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > 400)
@@ -61,18 +63,18 @@ export default function Footer({ settings }) {
 
             {/* Social icons */}
             <div className="flex gap-4 mt-auto">
-              <Link href="#" aria-label="Facebook" className="hover:text-emerald-700 transition">
+              <a href="https://facebook.com/" target="_blank" aria-label="Facebook" className="hover:text-emerald-700 transition">
                 <Facebook size={20} />
-              </Link>
-              <Link href="#" aria-label="Instagram" className="hover:text-emerald-700 transition">
+              </a>
+              <a href="https://instagram.com/" target="_blank" aria-label="Instagram" className="hover:text-emerald-700 transition">
                 <Instagram size={20} />
-              </Link>
-              <Link href="#" aria-label="Twitter" className="hover:text-emerald-700 transition">
+              </a>
+              <a href="https://x.com/" target="_blank" aria-label="Twitter" className="hover:text-emerald-700 transition">
                 <Twitter size={20} />
-              </Link>
-              <Link href="#" aria-label="YouTube" className="hover:text-emerald-700 transition">
+              </a>
+              <a href="https://youtube.com/" target="_blank" aria-label="YouTube" className="hover:text-emerald-700 transition">
                 <Youtube size={20} />
-              </Link>
+              </a>
             </div>
           </div>
         </div>

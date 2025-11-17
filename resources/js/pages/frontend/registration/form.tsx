@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import FrontendLayout from "@/layouts/frontend-layout";
+import { toast } from "sonner";
+import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 
 export default function RegistrationForm() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -27,7 +29,21 @@ export default function RegistrationForm() {
     const submit = (e) => {
         e.preventDefault();
         post(route("registration.submit"), {
-            onSuccess: () => reset(),
+            onStart: () => {
+                toast.info('Sedang Memproses', {
+                    icon: <Loader2 className="text-blue-500" />,
+                    description: 'Mengirim Pendaftaran',
+                });
+            },
+            onSuccess: () => {
+                reset();
+            },
+            onError: () => {
+                toast.error('Proses Gagal', {
+                    icon: <AlertTriangle className="text-red-500" />,
+                    description: 'Terjadi kesalahan, coba lagi 💥',
+                });
+            }
         });
     };
 
@@ -178,6 +194,6 @@ export default function RegistrationForm() {
                     </Card>
                 </div>
             </FrontendLayout>
-            </>
-            );
+        </>
+    );
 }

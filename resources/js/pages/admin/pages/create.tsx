@@ -7,16 +7,12 @@ import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { useState } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
-interface ParentMenu {
-    id: number;
-    name: string;
-}
 
-export default function Create({ parents = [] }: { parents: ParentMenu[] }) {
+
+export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         slug: '',

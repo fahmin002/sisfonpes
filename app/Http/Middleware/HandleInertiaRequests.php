@@ -62,14 +62,22 @@ class HandleInertiaRequests extends Middleware
                 ->orderByDesc('created_at')
                 ->get(),
 
-            
+
             // 🔹 Sidebar state (misal disimpan di cookie)
             'sidebarOpen' => ! $request->hasCookie('sidebar_state')
                 || $request->cookie('sidebar_state') === 'true',
-            
+
             'announcements' => fn() => \App\Models\Announcement::where('is_active', true)
-                ->orderByDesc('created_at')
-                ->get(),
+                ->when(true, function ($q) {
+                    $now = now();
+                    $q->where(function ($q) use ($now) {
+                        $q->whereNull('start_date')->orWhere('start_date', '<=', $now);
+                    })->where(function ($q) use ($now) {
+                        $q->whereNull('end_date')->orWhere('end_date', '>=', $now);
+                    });
+                })
+                ->orderByDesc('start_date')
+                ->paginate(3),
 
             'settings' => fn() => \App\Models\Setting::pluck('value', 'key')->toArray(),
         ];

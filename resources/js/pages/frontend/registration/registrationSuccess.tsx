@@ -1,7 +1,9 @@
 import { Head, Link, usePage } from "@inertiajs/react"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, CheckCircle2 } from "lucide-react"
+import { useEffect } from "react"
+import { toast, Toaster } from "sonner"
 
 export default function RegistrationSuccess() {
     const { props } = usePage()

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Menu, X, Search, ChevronDown, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, usePage } from "@inertiajs/react";
 
@@ -13,7 +12,6 @@ interface MenuItem {
   is_active: boolean | number | string;
 }
 
-/** 🔧 Build menu tree (induk → anak → cucu) */
 function buildMenuTree(menus: MenuItem[]) {
   const map = new Map<number, MenuItem>();
   menus.forEach((m) => map.set(m.id, { ...m, children: [] }));
@@ -34,7 +32,6 @@ function buildMenuTree(menus: MenuItem[]) {
   return roots;
 }
 
-/** ✅ Hanya ambil menu yang aktif */
 export function getActiveMenuTree(menus: MenuItem[]) {
   const activeMenus = menus.filter(
     (m) => m.is_active === 1 || m.is_active === "1" || m.is_active === true
@@ -43,16 +40,18 @@ export function getActiveMenuTree(menus: MenuItem[]) {
   return buildMenuTree(activeMenus);
 }
 
-
-export default function Navbar({ settings, menus }) {
+export default function Navbar() {
+  const { props } = usePage();
+  const settings: Record<string, string> = props.settings || {};
+  const menus: MenuItem[] = props.menus || [];
   const menuTree = getActiveMenuTree(menus);
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <nav className="border-b border-gray-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between py-3 px-4 md:px-8">
+        
         {/* Brand */}
         <Link
           href="/"
@@ -63,7 +62,9 @@ export default function Navbar({ settings, menus }) {
             alt="Logo"
             className="h-8 w-8 rounded-full"
           />
-          <span className="text-lg font-bold tracking-wide">{settings.site_name || "Darul Amin"}</span>
+          <span className="text-lg font-bold tracking-wide">
+            {settings.site_name || "Darul Amin"}
+          </span>
         </Link>
 
         {/* Menu button (mobile) */}
@@ -93,7 +94,6 @@ export default function Navbar({ settings, menus }) {
                 </Link>
               ) : (
                 <>
-                  {/* Dropdown trigger */}
                   <button className="flex items-center gap-1 py-3 md:py-0 hover:text-emerald-700 transition-colors">
                     {menu.name}
                     <ChevronDown
@@ -119,7 +119,7 @@ export default function Navbar({ settings, menus }) {
                           )}
                         </Link>
 
-                        {/* Submenu level 2 (cucu) */}
+                        {/* Submenu level 2 */}
                         {child.children && child.children.length > 0 && (
                           <ul className="hidden group-hover/item:block absolute left-full top-0 ml-1 bg-white border border-gray-100 rounded-md shadow-lg py-2 min-w-[200px] z-50">
                             {child.children.map((grand, k) => (
@@ -141,35 +141,8 @@ export default function Navbar({ settings, menus }) {
               )}
             </li>
           ))}
-
-          {/* Search button */}
-          <li className="px-4 md:px-0">
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="text-gray-600 hover:text-emerald-700 transition-colors flex items-center gap-1"
-            >
-              <Search size={18} />
-              <span className="hidden md:inline">Cari</span>
-            </button>
-          </li>
         </ul>
       </div>
-
-      {/* Search bar overlay */}
-      {searchOpen && (
-        <div className="border-t border-gray-200 bg-white/95 py-4 shadow-inner">
-          <div className="max-w-3xl mx-auto px-4 flex items-center gap-3">
-            <input
-              type="search"
-              placeholder="Ketikkan pencarian dan tekan Enter..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-600"
-            />
-            <Button variant="ghost" onClick={() => setSearchOpen(false)}>
-              <X size={20} className="text-gray-600" />
-            </Button>
-          </div>
-        </div>
-      )}
     </nav>
   );
 }

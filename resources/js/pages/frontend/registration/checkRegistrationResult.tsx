@@ -8,8 +8,24 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 export default function CheckRegistrationResult({ registration, code }) {
+    useEffect(() => {
+        if (!registration) {
+            toast.warning('Gagal', {
+                icon: <AlertTriangle className="text-yellow-500" />,
+                description: 'Data tidak ditemukan ⚠️',
+            });
+        } else {
+            toast.success('Berhasil', {
+                icon: <CheckCircle2 className="text-green-500" />,
+                description: 'Data Ditemukan 🎉',
+            });
+        }
+    }, [])
     return (
         <FrontendLayout>
             <Head title="Hasil Pencarian Pendaftaran" />
@@ -59,8 +75,8 @@ export default function CheckRegistrationResult({ registration, code }) {
                                             registration.status === "pending"
                                                 ? "bg-yellow-500"
                                                 : registration.status === "accepted"
-                                                ? "bg-green-600"
-                                                : "bg-red-600"
+                                                    ? "bg-green-600"
+                                                    : "bg-red-600"
                                         }
                                     >
                                         {registration.status.toUpperCase()}

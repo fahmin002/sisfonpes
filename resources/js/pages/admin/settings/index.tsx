@@ -36,7 +36,7 @@ export default function Settings({ settings = {} }) {
       'Situs sedang dalam pemeliharaan. Silakan kembali lagi nanti.',
     logo: settings.logo || null
   });
-
+  console.log(settings)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     post(route('admin.settings.update'));

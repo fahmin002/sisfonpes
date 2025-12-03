@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class RegistrationController extends Controller
 {
@@ -18,6 +19,8 @@ class RegistrationController extends Controller
         if ($search = $request->get('search')) {
             $query->where('registration_code', "%{$search}%")
                 ->orWhere('full_name', 'like', "%{$search}%")
+                ->orWhere('nik', 'like', "%{$search}%")
+                ->orWhere('registration_code', 'like', "%{$search}%")
                 ->orWhere('parent_name', 'like', "%{$search}%");
         }
 
@@ -45,6 +48,7 @@ class RegistrationController extends Controller
     {
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
+            'nik' => 'required|string|max:16|unique:registrations,nik',
             'gender' => 'required|in:male,female',
             'birth_place' => 'required|string|max:255',
             'birth_date' => 'required|date',
@@ -52,7 +56,12 @@ class RegistrationController extends Controller
             'previous_school' => 'nullable|string|max:255',
             'parent_name' => 'required|string|max:255',
             'parent_contact' => 'required|string|max:20',
+            'payment_proof' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
+
+        if ($request->hasFile('payment_proof')) {
+            $validated['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
+        }
 
         $registration = Registration::create($validated);
 
@@ -86,15 +95,28 @@ class RegistrationController extends Controller
     public function update(Request $request, Registration $registration)
     {
         $validated = $request->validate([
-            'full_name' => 'required|string|max:255',
-            'gender' => 'required|in:male,female',
-            'birth_place' => 'required|string|max:255',
-            'birth_date' => 'required|date',
-            'address' => 'required|string',
-            'previous_school' => 'nullable|string|max:255',
-            'parent_name' => 'required|string|max:255',
-            'parent_contact' => 'required|string|max:20',
+            'nik'              => 'sometimes|required|string|max:16|unique:registrations,nik,' . $registration->id,
+            'full_name'        => 'sometimes|required|string|max:255',
+            'gender'           => 'sometimes|required|in:male,female',
+            'birth_place'      => 'sometimes|required|string|max:255',
+            'birth_date'       => 'sometimes|required|date',
+            'address'          => 'sometimes|required|string',
+            'previous_school'  => 'sometimes|nullable|string|max:255',
+            'parent_name'      => 'sometimes|required|string|max:255',
+            'parent_contact'   => 'sometimes|required|string|max:20',
+            'payment_proof'    => 'sometimes|nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
+
+        if ($request->hasFile('payment_proof')) {
+
+            if ($registration->payment_proof) {
+                Storage::disk('public')->delete($registration->payment_proof);
+            }
+
+            $validated['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
+        } else {
+            $validated['payment_proof'] = $registration->payment_proof;
+        }
 
         $registration->update($validated);
 
@@ -105,6 +127,7 @@ class RegistrationController extends Controller
                 'type' => 'info',
             ]);
     }
+
 
     public function updateStatus(Registration $registration, Request $request)
     {

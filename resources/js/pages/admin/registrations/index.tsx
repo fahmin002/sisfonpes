@@ -83,6 +83,7 @@ export default function Index({ registrations, filters }) {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b">
+                      <th className="py-2 text-left">NIK</th>
                       <th className="py-2 text-left">Nama Lengkap</th>
                       <th className="py-2 text-left">Tanggal Daftar</th>
                       <th className="py-2 text-left">Status</th>
@@ -96,6 +97,7 @@ export default function Index({ registrations, filters }) {
                         key={reg.id}
                         className={cn("border-b transition-colors hover:bg-muted/40")}
                       >
+                        <td className="py-2">{reg.nik}</td>
                         <td className="py-2">{reg.full_name}</td>
                         <td className="py-2">
                           {new Date(reg.created_at).toLocaleDateString("id-ID")}

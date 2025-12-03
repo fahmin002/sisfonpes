@@ -12,6 +12,7 @@ class Registration extends Model
     protected $fillable = [
         'registration_code',
         'full_name',
+        'nik',
         'gender',
         'birth_place',
         'birth_date',
@@ -20,6 +21,7 @@ class Registration extends Model
         'parent_name',
         'parent_contact',
         'status',
+        'payment_proof'
     ];
 
     protected static function boot()

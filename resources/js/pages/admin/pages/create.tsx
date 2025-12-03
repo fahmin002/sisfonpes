@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
@@ -39,6 +40,18 @@ export default function Create() {
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-+|-+$/g, '');
         setData('slug', slug);
+    }
+
+    const [preview, setPreview] = useState<string | null>(null);
+    const handleThumbnailChange = (file: File | null) => {
+        setData('thumbnail', file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => setPreview(reader.result as string);
+            reader.readAsDataURL(file);
+        } else {
+            setPreview(null);
+        }
     }
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -138,14 +151,23 @@ export default function Create() {
                                     id="thumbnail"
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) =>
-                                        setData(
-                                            'thumbnail',
-                                            e.target.files?.[0] ?? null,
-                                        )
-                                    }
-                                    className="mt-2"
+                                    onChange={(e) => {
+                                        handleThumbnailChange(e.target.files?.[0] ?? null)
+                                    }}
+                                    className='mt-2'
                                 />
+                                {preview && (
+                                    <div className="mt-3">
+                                        <p className="mb-1 text-sm text-muted-foreground">
+                                            Gambar saat ini:
+                                        </p>
+                                        <img
+                                            src={preview}
+                                            alt="Preview Thumbnail"
+                                            className="w-56 rounded-md border"
+                                        />
+                                    </div>
+                                )}
                                 {errors.thumbnail && (
                                     <p className="text-sm text-red-500">
                                         {errors.thumbnail}
@@ -167,57 +189,6 @@ export default function Create() {
                                     onCheckedChange={(val) => setData('is_info_link', val)}
                                 />
                             </div>
-
-                            {/* Tambahkan ke menu navigasi */}
-                            {/* <div className="flex items-center justify-between rounded-md border p-3">
-                                <div>
-                                    <Label htmlFor="add_to_menu">
-                                        Tambahkan ke menu navigasi
-                                    </Label>
-                                    <p className="text-xs text-muted-foreground">
-                                        Jika diaktifkan, halaman ini otomatis
-                                        muncul di navigasi utama.
-                                    </p>
-                                </div>
-                                <Switch
-                                    id="add_to_menu"
-                                    checked={data.add_to_menu}
-                                    onCheckedChange={(val) => {
-                                        setData('add_to_menu', val);
-                                        setShowParentSelect(val);
-                                    }}
-                                />
-                            </div> */}
-
-                            {/* Parent Menu (opsional) */}
-                            {/* {showParentSelect && (
-                                <div>
-                                    <Label htmlFor="menu_parent_id">
-                                        Parent Menu (Opsional)
-                                    </Label>
-                                    <select
-                                        id="menu_parent_id"
-                                        className="mt-2 w-full rounded-md border bg-background p-2"
-                                        value={data.menu_parent_id || ''}
-                                        onChange={(e) =>
-                                            setData(
-                                                'menu_parent_id',
-                                                e.target.value,
-                                            )
-                                        }
-                                    >
-                                        <option value="">(Tidak ada)</option>
-                                        {parents.map((parent) => (
-                                            <option
-                                                key={parent.id}
-                                                value={parent.id}
-                                            >
-                                                {parent.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )} */}
 
                             <Button type="submit" disabled={processing}>
                                 Simpan

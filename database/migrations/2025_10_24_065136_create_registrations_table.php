@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('registration_code')->unique(); // Kode tiket unik
             $table->string('full_name');
+            $table->string('nik');
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->string('birth_place')->nullable();
             $table->date('birth_date')->nullable();
@@ -19,6 +20,7 @@ return new class extends Migration {
             $table->string('parent_name')->nullable();
             $table->string('parent_contact')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->string('payment_proof');
             $table->timestamps();
         });
     }

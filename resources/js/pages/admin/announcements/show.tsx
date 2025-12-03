@@ -11,13 +11,17 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ArrowLeft } from "lucide-react"
+import AppLayout from "@/layouts/app-layout"
 
 export default function Show() {
     const { props }: any = usePage()
     const announcement = props.announcement
-
+    const breadcrumbs = [
+        { title: "Pengumuman", href: "/admin/announcements" },
+        { title: "Detail Pengumuman", href: `/admin/announcements/${announcement.id}` },
+    ]
     return (
-        <>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Detail Pengumuman - ${announcement.title}`} />
 
             <div className="container max-w-3xl mx-auto py-10 space-y-6">
@@ -119,6 +123,6 @@ export default function Show() {
                     <CardFooter></CardFooter>
                 </Card>
             </div>
-        </>
+        </AppLayout>
     )
 }

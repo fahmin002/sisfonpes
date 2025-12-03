@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Create() {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -23,6 +24,18 @@ export default function Create() {
         content: '',
         thumbnail: null as File | null,
     });
+
+    const [preview, setPreview] = useState<string | null>(null);
+    const handleThumbnailChange = (file: File | null) => {
+        setData('thumbnail', file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => setPreview(reader.result as string);
+            reader.readAsDataURL(file);
+        } else {
+            setPreview(null);
+        }
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -77,13 +90,23 @@ export default function Create() {
                                     id="thumbnail"
                                     type="file"
                                     onChange={(e) =>
-                                        setData(
-                                            'thumbnail',
-                                            e.target.files?.[0] ?? null,
-                                        )
+                                        handleThumbnailChange(e.target.files?.[0] ?? null)
                                     }
+                                    accept="image/*"
                                     className="mt-2"
                                 />
+                                {preview && (
+                                    <div className="mt-3">
+                                        <p className="mb-1 text-sm text-muted-foreground">
+                                            Gambar saat ini:
+                                        </p>
+                                        <img
+                                            src={preview}
+                                            alt="Preview Thumbnail"
+                                            className="w-56 rounded-md border"
+                                        />
+                                    </div>
+                                )}
                                 {errors.thumbnail && (
                                     <p className="text-sm text-red-500">
                                         {errors.thumbnail}

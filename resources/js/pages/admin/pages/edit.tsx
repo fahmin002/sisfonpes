@@ -35,7 +35,6 @@ export default function Edit({
   parents: ParentMenu[];
   page: Page;
 }) {
-  const { menu_parent_id, is_in_menu } = usePage().props;
 
   const { data, setData, processing, errors } = useForm({
     title: page.title || '',

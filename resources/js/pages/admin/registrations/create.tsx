@@ -5,11 +5,13 @@ import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout";
 import { type BreadcrumbItem } from "@/types";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         full_name: "",
+        nik: "",
         gender: "",
         birth_place: "",
         birth_date: "",
@@ -17,7 +19,22 @@ export default function Create() {
         previous_school: "",
         parent_name: "",
         parent_contact: "",
+        payment_proof: null as File | null,
     });
+    const [preview, setPreview] = useState<string | null>(null);
+
+    const handleProofChange = (file: File | null) => {
+        setData("payment_proof", file);
+        if (file) {
+            // const reader = new FileReader();
+            // reader.onloadend = () => setPreview(reader.result as string);
+            // reader.readAsDataURL(file);
+            const url = URL.createObjectURL(file);
+            setPreview(url);
+        } else {
+            setPreview(null);
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -48,6 +65,17 @@ export default function Create() {
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+                            <div>
+                                <Label>NIK</Label>
+                                <Input
+                                    id="nik"
+                                    value={data.nik}
+                                    onChange={(e) => setData("nik", e.target.value)}
+                                    className="mt-2"
+                                    maxLength={16}
+                                />
+                                {errors.nik && <p className="text-red-500 text-sm">{errors.nik}</p>}
+                            </div>
                             <div>
                                 <Label>Nama Lengkap</Label>
                                 <Input
@@ -125,6 +153,34 @@ export default function Create() {
                                     onChange={(e) => setData("parent_contact", e.target.value)}
                                     className="mt-2"
                                 />
+                            </div>
+                            {/* Input file for payment proof */}
+                            <div>
+                                <Label>Bukti Pembayaran (Opsional)</Label>
+                                <Input
+                                    id="payment_proof"
+                                    type="file"
+                                    onChange={(e) => handleProofChange(e.target.files?.[0] ?? null)}
+                                    className="mt-2"
+                                    accept="image/*,application/pdf"
+                                />
+                                {preview && (
+                                    <div className="mt-3">
+                                        {data.payment_proof && data.payment_proof.type === "application/pdf" ? (
+                                            <iframe
+                                                src={preview}
+                                                className="w-full h-64 border"
+                                            ></iframe>
+                                        ) : (
+                                            <img
+                                                src={preview}
+                                                className="w-40 h-28 object-cover rounded-md border"
+                                            />
+                                        )}
+                                    </div>
+                                )}
+
+                                {errors.payment_proof && <p className="text-red-500 text-sm">{errors.payment_proof}</p>}
                             </div>
 
                             <div className="col-span-2">

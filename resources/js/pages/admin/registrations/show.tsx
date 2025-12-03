@@ -1,4 +1,4 @@
-import { Head, usePage, Link, useForm } from "@inertiajs/react"
+import { Head, usePage, Link, useForm, router } from "@inertiajs/react"
 import {
     Card,
     CardHeader,
@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, CheckCircle, XCircle, RefreshCw } from "lucide-react"
 import { GlobalConfirmDialog } from "@/components/global-confirm-dialog"
+import { route } from "ziggy-js"
+import AppLayout from "@/layouts/app-layout"
 
 export default function Show() {
     const { props }: any = usePage()
@@ -30,10 +32,25 @@ export default function Show() {
         )
     }
 
-    const { patch } = useForm();
+    const breadcrumbs = [
+        {
+            title: "Pendaftaran Santri",
+            href: "/admin/registrations",
+        },
+        {
+            title: `Detail Pendaftar - ${registration.full_name}`,
+            href: `/admin/registrations/${registration.id}`,
+        },
+    ];
 
+    const handleStatusChange = (status, registration) => {
+        router.patch(
+            route("admin.registrations.updateStatus", registration.id),
+            { status }
+        )
+    }
     return (
-        <>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Detail Pendaftar - ${registration.full_name}`} />
 
             <div className="container max-w-4xl mx-auto py-10 space-y-6">
@@ -74,6 +91,10 @@ export default function Show() {
                             <div>
                                 <h3 className="font-semibold mb-2">Informasi Pribadi</h3>
                                 <dl className="text-sm space-y-1 flex flex-col gap-2">
+                                    <div>
+                                        <dt className="font-semibold">NIK</dt>
+                                        <dd>{registration.nik}</dd>
+                                    </div>
                                     <div>
                                         <dt className="font-semibold">Nama Lengkap</dt>
                                         <dd>{registration.full_name}</dd>
@@ -145,6 +166,25 @@ export default function Show() {
                                 {registration.note || "Tidak ada catatan tambahan."}
                             </p>
                         </div>
+                        <Separator />
+                        <div className="mt-4">
+                            <h3 className="font-medium mb-2">Bukti Pembayaran</h3>
+
+                            {!registration.payment_proof ? (
+                                <p className="text-sm text-muted-foreground">Tidak ada bukti pembayaran.</p>
+                            ) : registration.payment_proof.toLowerCase().endsWith(".pdf") ? (
+                                <iframe
+                                    src={`/storage/${registration.payment_proof}`}
+                                    className="w-full h-96 border rounded"
+                                ></iframe>
+                            ) : (
+                                <img
+                                    src={`/storage/${registration.payment_proof}`}
+                                    className="w-full max-w-md rounded border object-cover"
+                                    alt="Payment Proof"
+                                />
+                            )}
+                        </div>
                     </CardContent>
 
                     <CardFooter className="flex justify-between">
@@ -165,9 +205,7 @@ export default function Show() {
                                 confirmText="Reset"
                                 confirmVariant="outline"
                                 onConfirm={() =>
-                                    patch(route("admin.registrations.updateStatus", { id: registration.id }), {
-                                        data: { status: "pending" },
-                                    })
+                                    handleStatusChange("pending", registration)
                                 }
                             />
 
@@ -182,9 +220,7 @@ export default function Show() {
                                 confirmText="Terima"
                                 confirmVariant="default"
                                 onConfirm={() =>
-                                    patch(route("admin.registrations.updateStatus", { id: registration.id }), {
-                                        data: { status: "accepted" },
-                                    })
+                                    handleStatusChange("accepted", registration)
                                 }
                             />
 
@@ -199,15 +235,13 @@ export default function Show() {
                                 confirmText="Tolak"
                                 confirmVariant="destructive"
                                 onConfirm={() =>
-                                    patch(route("admin.registrations.updateStatus", { id: registration.id }), {
-                                        data: { status: "rejected" },
-                                    })
+                                    handleStatusChange("rejected", registration)
                                 }
                             />
                         </div>
                     </CardFooter>
                 </Card>
             </div>
-        </>
+        </AppLayout>
     )
 }

@@ -169,10 +169,7 @@ class FrontendController extends Controller
 
     public function registrationForm()
     {
-        $settings = Setting::first();
-
         return Inertia::render('frontend/registration/form', [
-            'settings' => $settings,
             'meta' => [
                 'title' => 'Formulir Pendaftaran',
                 'description' => 'Pendaftaran santri baru tahun ajaran terbaru.',
@@ -184,6 +181,7 @@ class FrontendController extends Controller
     {
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
+            'nik' => ['required', 'string', 'max:16', 'unique:registrations,nik'],
             'gender' => 'required|in:male,female',
             'birth_place' => 'required|string|max:255',
             'birth_date' => 'required|date',
@@ -191,7 +189,12 @@ class FrontendController extends Controller
             'previous_school' => 'nullable|string|max:255',
             'parent_name' => 'required|string|max:255',
             'parent_contact' => 'required|string|max:20',
+            'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
+
+        if ($request->hasFile('payment_proof')) {
+            $validated['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
+        }
 
         $registration = Registration::create($validated);
 

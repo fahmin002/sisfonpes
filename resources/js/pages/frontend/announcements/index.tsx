@@ -2,7 +2,7 @@
 // frontend/announcements/index.tsx
 
 import FrontendLayout from "@/layouts/frontend-layout";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 import { useState } from "react";
@@ -17,10 +17,8 @@ export default function AnnouncementsIndex({ announcements, filters }) {
   );
 
   return (
-    <FrontendLayout
-      title="Pengumuman"
-      description="Informasi resmi terbaru dari pesantren."
-    >
+    <FrontendLayout title="Pengumuman">
+      <Head title="Pengumuman" />
       <div className="space-y-8 max-w-4xl mx-auto">
 
         {/* Page header */}

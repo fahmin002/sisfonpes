@@ -14,7 +14,7 @@ export default function Home({ posts = [], programs = [], galleries = [], infoLi
 
   return (
     <FrontendLayout>
-      <Head title="Beranda - Pondok Pesantren Darul Amin" />
+      <Head title="Beranda" />
 
       {/* HERO SECTION */}
       <motion.section

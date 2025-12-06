@@ -23,6 +23,24 @@ export default function RegistrationSuccess() {
                         </CardTitle>
                     </CardHeader>
 
+                    {/* <CardContent className="space-y-4">
+                        <p className="text-muted-foreground">
+                            Terima kasih telah mendaftar sebagai calon santri.
+                        </p>
+
+                        <div className="bg-muted p-4 rounded-lg">
+                            <p className="text-sm text-muted-foreground mb-1">
+                                Kode Pendaftaran Anda:
+                            </p>
+                            <p className="text-xl font-bold tracking-widest text-primary">
+                                {code}
+                            </p>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground">
+                            Simpan kode ini untuk mengecek status pendaftaran Anda.
+                        </p>
+                    </CardContent> */}
                     <CardContent className="space-y-4">
                         <p className="text-muted-foreground">
                             Terima kasih telah mendaftar sebagai calon santri.
@@ -40,7 +58,17 @@ export default function RegistrationSuccess() {
                         <p className="text-sm text-muted-foreground">
                             Simpan kode ini untuk mengecek status pendaftaran Anda.
                         </p>
+
+                        {/* --- Himbauan tambahan --- */}
+                        <div className="bg-yellow-50 border border-yellow-300 text-yellow-900 text-sm p-3 rounded-md">
+                            <p>
+                                <strong>Himbauan:</strong> Mohon membawa berkas persyaratan pendaftaran
+                                (fotokopi KK, Akta Kelahiran, Ijazah terakhir, serta pas foto terbaru)
+                                saat datang ke Pondok Pesantren Darul Amin untuk proses verifikasi.
+                            </p>
+                        </div>
                     </CardContent>
+
 
                     <CardFooter className="flex flex-col gap-3">
                         <Link href={route("registration.check")}>

@@ -27,7 +27,7 @@ export default function Footer() {
           <div className="flex-1 space-y-3">
             <div className="flex items-center gap-3">
               <img
-                src="/images/logo.jpg"
+                src={`/storage/${settings.logo}`}
                 alt="Logo Darul Amin"
                 className="h-12 w-12 rounded-full object-cover"
               />

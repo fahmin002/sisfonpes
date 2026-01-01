@@ -59,7 +59,7 @@ export default function PostsIndex() {
                         >
                             {post.thumbnail && (
                                 <img
-                                    src={post.thumbnail}
+                                    src={`/storage/${post.thumbnail}`}
                                     alt={post.title}
                                     className="w-full h-48 object-cover group-hover:scale-105 transition"
                                 />

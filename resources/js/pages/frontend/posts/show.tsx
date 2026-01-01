@@ -26,7 +26,7 @@ export default function PostShow() {
       {post.thumbnail && (
         <div className="container max-w-4xl mx-auto px-5 mb-8">
           <img
-            src={post.thumbnail}
+            src={`/storage/${post.thumbnail}`}
             alt={post.title}
             className="w-full h-64 object-cover rounded-xl shadow-md"
           />

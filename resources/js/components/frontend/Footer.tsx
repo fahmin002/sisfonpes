@@ -27,16 +27,17 @@ export default function Footer() {
           <div className="flex-1 space-y-3">
             <div className="flex items-center gap-3">
               <img
-                src={`/storage/${settings.logo}`}
+                src={`/storage/${settings.site_logo}`}
                 alt="Logo Darul Amin"
                 className="h-12 w-12 rounded-full object-cover"
               />
               <h2 className="font-bold text-lg text-emerald-800">
-                Pondok Pesantren {settings.site_name || "Darul Amin"}
+                {settings.site_name || "Darul Amin"}
               </h2>
             </div>
             <p className="text-sm leading-relaxed text-gray-700">
-              <strong>{settings.address}</strong>
+              {settings.contact_address || `Jln. Medan - Kutacane Km 31, Desa Tanoh Alas, Kecamatan Babul Makmur
+Aceh Tenggara`}
             </p>
             <p className="text-sm text-gray-600">
               Sekretariat: (+62) {settings.contact_phone}
@@ -63,16 +64,16 @@ export default function Footer() {
 
             {/* Social icons */}
             <div className="flex gap-4 mt-auto">
-              <a href="https://facebook.com/" target="_blank" aria-label="Facebook" className="hover:text-emerald-700 transition">
+              <a href={`https://facebook.com/${settings.social_facebook}`} target="_blank" aria-label="Facebook" className="hover:text-emerald-700 transition">
                 <Facebook size={20} />
               </a>
-              <a href="https://instagram.com/" target="_blank" aria-label="Instagram" className="hover:text-emerald-700 transition">
+              <a href={`https://instagram.com/${settings.social_instagram}`} target="_blank" aria-label="Instagram" className="hover:text-emerald-700 transition">
                 <Instagram size={20} />
               </a>
-              <a href="https://x.com/" target="_blank" aria-label="Twitter" className="hover:text-emerald-700 transition">
+              <a href={`https://x.com/${settings.social_twitter}`} target="_blank" aria-label="Twitter" className="hover:text-emerald-700 transition">
                 <Twitter size={20} />
               </a>
-              <a href="https://youtube.com/" target="_blank" aria-label="YouTube" className="hover:text-emerald-700 transition">
+              <a href={`https://youtube.com/${settings.social_youtube}`} target="_blank" aria-label="YouTube" className="hover:text-emerald-700 transition">
                 <Youtube size={20} />
               </a>
             </div>
@@ -81,7 +82,7 @@ export default function Footer() {
 
         {/* Footer bottom */}
         <div className="mt-10 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Pondok Pesantren Darul Amin. All rights reserved.
+          © {new Date().getFullYear()} {settings.site_name || "Dayah Perbatasan Darul Amin"}. All rights reserved.
         </div>
       </div>
 

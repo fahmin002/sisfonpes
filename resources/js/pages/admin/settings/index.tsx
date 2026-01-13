@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { type BreadcrumbItem } from '@/types';
+import TiptapEditor from '@/components/TiptapEditor';
 
 export default function Settings({ settings = {} }) {
   const breadcrumbs: BreadcrumbItem[] = [
@@ -22,21 +23,36 @@ export default function Settings({ settings = {} }) {
   const { data, setData, post, processing, errors } = useForm({
     site_name: settings.site_name || 'Sistem Informasi Pesantren',
     site_tagline: settings.site_tagline || '',
+    site_logo: settings.site_logo || null,
     contact_email: settings.contact_email || '',
     contact_phone: settings.contact_phone || '',
-    address: settings.address || '',
-    dark_mode: localStorage.getItem('theme-mode') === 'dark' || settings.dark_mode === '1' ? true : false,
-    theme_name: localStorage.getItem('theme-name') || settings.theme_name || 'defaultTheme',
-    show_announcements: settings.show_announcements === '1' ? true : false,
-    show_gallery: settings.show_gallery === '1' ? true : false,
-    show_blog: settings.show_blog === '1' ? true : false,
-    maintenance_mode: settings.maintenance_mode === '1' ? true : false,
-    maintenance_message:
-      settings.maintenance_message ||
-      'Situs sedang dalam pemeliharaan. Silakan kembali lagi nanti.',
-    logo: settings.logo || null
+    contact_address: settings.contact_address || '',
+    social_facebook: settings.social_facebook || '',
+    social_instagram: settings.social_instagram || '',
+    social_twitter: settings.social_twitter || '',
+    social_youtube: settings.social_youtube || '',
+    appearance_dark_mode: Boolean(
+      localStorage.getItem('theme-mode') === 'dark' ||
+      settings.appearance_dark_mode === true ||
+      settings.appearance_dark_mode === '1'
+    ),
+    appearance_theme_name: localStorage.getItem('theme-name') || settings.appearance_theme_name || 'defaultTheme',
+    feature_announcements: Boolean(settings.feature_announcements === '1' ? true : false),
+    feature_gallery: Boolean(settings.feature_gallery === '1' ? true : false),
+    feature_blog: Boolean(settings.feature_blog === '1' ? true : false),
+    registration_qris: settings.registration_qris || null,
+    registration_flyer: settings.registration_flyer || null,
+    registration_fee: settings.registration_fee || '',
+    registration_note: settings.registration_note || '',
+    system_maintenance: Boolean(
+      settings.system_maintenance === true ||
+      settings.system_maintenance === '1'
+    ),
+    system_maintenance_message:
+      settings.system_maintenance_message || '',
+    profile_vision: settings.profile_vision || '',
+    profile_mission: settings.profile_mission || '',
   });
-  console.log(settings)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     post(route('admin.settings.update'));
@@ -46,17 +62,42 @@ export default function Settings({ settings = {} }) {
     window.location.reload();
     toast.info('Sinkronisasi selesai 🔄');
   };
-  const [preview, setPreview] = useState<string | null>(null);
+  // Preview logo sebelum diupload
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const handleLogoChange = (file: File | null) => {
-    setData("logo", file);
+    setData("site_logo", file);
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
+      reader.onloadend = () => setLogoPreview(reader.result as string);
       reader.readAsDataURL(file);
     } else {
-      setPreview(null);
+      setLogoPreview(null);
     }
   };
+  // qris image preview
+  const [qrisPreview, setQrisPreview] = useState<string | null>(null);
+  const handleQrisChange = (file: File | null) => {
+    setData("registration_qris", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setQrisPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      setQrisPreview(null);
+    }
+  }
+  // registration flyer image preview
+  const [regFlyerPreview, setRegFlyerPreview] = useState<string | null>(null);
+  const handleRegFlyerChange = (file: File | null) => {
+    setData("registration_flyer", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setRegFlyerPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      setRegFlyerPreview(null);
+    }
+  }
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Pengaturan Umum" />
@@ -81,9 +122,11 @@ export default function Settings({ settings = {} }) {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <Tabs defaultValue="general">
-                <TabsList className="mb-4 grid w-full grid-cols-4">
+                <TabsList className="mb-4 grid w-full grid-cols-3 md:grid-cols-6">
                   <TabsTrigger value="general">Umum</TabsTrigger>
                   <TabsTrigger value="appearance">Tampilan</TabsTrigger>
+                  <TabsTrigger value="social">Sosial Media</TabsTrigger>
+                  <TabsTrigger value="registration">Flyer & QRIS</TabsTrigger>
                   <TabsTrigger value="content">Konten</TabsTrigger>
                   <TabsTrigger value="system">Sistem</TabsTrigger>
                 </TabsList>
@@ -133,8 +176,8 @@ export default function Settings({ settings = {} }) {
                   <div>
                     <Label>Alamat</Label>
                     <Input
-                      value={data.address}
-                      onChange={(e) => setData('address', e.target.value)}
+                      value={data.contact_address}
+                      onChange={(e) => setData('contact_address', e.target.value)}
                       placeholder="Alamat lengkap pesantren"
                       className='mt-2'
                     />
@@ -155,26 +198,173 @@ export default function Settings({ settings = {} }) {
                       className="mt-2"
                     />
 
-                    {(preview || settings.logo) && (
+                    {(logoPreview || settings.site_logo) && (
                       <div className="mt-3">
                         <p className="mb-1 text-sm text-muted-foreground">
                           Logo saat ini:
                         </p>
                         <img
-                          src={preview || `/storage/${settings.logo}`}
+                          src={logoPreview || `/storage/${settings.site_logo}`}
                           alt={settings.site_name}
                           className="w-56 rounded-md border"
                         />
                       </div>
                     )}
-                    {errors.logo && (
+                    {errors.site_logo && (
                       <p className="text-sm text-red-500">
-                        {errors.logo}
+                        {errors.site_logo}
                       </p>
                     )}
                   </div>
+                  {/* Visi (Dengan TipTapEditor) */}
+                  <div>
+                    <TiptapEditor
+                      label='Visi Pesantren'
+                      value={data.profile_vision}
+                      onChange={(value) => setData('profile_vision', value)}
+                      error={errors.profile_vision}
+                    />
+                  </div>
+                  {/* Misi (Dengan TipTapEditor) */}
+                  <div>
+                    <TiptapEditor
+                      label='Misi Pesantren'
+                      value={data.profile_mission}
+                      onChange={(value) => setData('profile_mission', value)}
+                      error={errors.profile_mission}
+                    />
+                  </div>
                 </TabsContent>
 
+                {/* Tab Flyer Pendaftaran dan Pembayaran */}
+                <TabsContent value="registration" className="space-y-4">
+                  <div>
+                    <Label>
+                      Flyer Pendaftaran
+                    </Label>
+                    <Input
+                      id="reg_flyer"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        handleRegFlyerChange(
+                          e.target.files?.[0] ?? null
+                        )
+                      }
+                      className="mt-2"
+                    />
+
+                    {(regFlyerPreview || settings.registration_flyer) && (
+                      <div className="mt-3">
+                        <p className="mb-1 text-sm text-muted-foreground">
+                          Flyer pendaftaran saat ini:
+                        </p>
+                        <img
+                          src={regFlyerPreview || `/storage/${settings.registration_flyer}`}
+                          alt={settings.site_name}
+                          className="w-56 rounded-md border"
+                        />
+                      </div>
+                    )}
+                    {errors.registration_flyer && (
+                      <p className="text-sm text-red-500">
+                        {errors.registration_flyer}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label>
+                      QRIS Pembayaran
+                    </Label>
+                    <Input
+                      id="qris"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        handleQrisChange(
+                          e.target.files?.[0] ?? null
+                        )
+                      }
+                      className="mt-2"
+                    />
+
+                    {(qrisPreview || settings.registration_qris) && (
+                      <div className="mt-3">
+                        <p className="mb-1 text-sm text-muted-foreground">
+                          QRIS pembayaran saat ini:
+                        </p>
+                        <img
+                          src={qrisPreview || `/storage/${settings.registration_qris}`}
+                          alt={settings.site_name}
+                          className="w-56 rounded-md border"
+                        />
+                      </div>
+                    )}
+                    {errors.registration_qris && (
+                      <p className="text-sm text-red-500">
+                        {errors.registration_qris}
+                      </p>
+                    )}
+                  </div>
+                  {/* registration fee */}
+                  <div>
+                    <Label>Biaya Pendaftaran</Label>
+                    <Input
+                      value={data.registration_fee}
+                      onChange={(e) =>
+                        setData('registration_fee', e.target.value)
+                      }
+                      placeholder="Biaya pendaftaran siswa baru"
+                      className='mt-2'
+                    />
+                  </div>
+                  {/* registration note */}
+                  <div>
+                    <Label>Catatan Pendaftaran</Label>
+                    <Input
+                      value={data.registration_note}
+                      onChange={(e) =>
+                        setData('registration_note', e.target.value)
+                      }
+                      placeholder="Catatan penting terkait pendaftaran"
+                      className='mt-2'
+                    />
+                  </div>
+                </TabsContent>
+                {/* Tab Sosial Media */}
+                <TabsContent value="social" className="space-y-4">
+                  <div>
+                    <Label htmlFor="facebook">Facebook</Label>
+                    <Input
+                      id="facebook"
+                      value={data.social_facebook}
+                      onChange={(e) => setData("social_facebook", e.target.value)}
+                      placeholder="https://www.facebook.com/..."
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="instagram">Instagram</Label>
+                    <Input
+                      id="instagram"
+                      value={data.social_instagram}
+                      onChange={(e) => setData("social_instagram", e.target.value)}
+                      placeholder="https://www.instagram.com/..."
+                      className="mt-2"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="youtube">YouTube</Label>
+                    <Input
+                      id="youtube"
+                      value={data.social_youtube}
+                      onChange={(e) => setData("social_youtube", e.target.value)}
+                      placeholder="https://www.youtube.com/..."
+                      className="mt-2"
+                    />
+                  </div>
+                </TabsContent>
                 {/* Tab Tampilan */}
                 <TabsContent value="appearance" className="space-y-4">
                   {/* 🌗 Mode Gelap */}
@@ -186,10 +376,10 @@ export default function Settings({ settings = {} }) {
                       </p>
                     </div>
                     <Switch
-                      checked={data.dark_mode}
+                      checked={data.appearance_dark_mode}
                       onCheckedChange={(val) => {
-                        setData("dark_mode", val);
-                        setActiveTheme(data.theme_name || "defaultTheme", val ? "dark" : "light");
+                        setData("appearance_dark_mode", val);
+                        setActiveTheme(data.appearance_theme_name || "defaultTheme", val ? "dark" : "light");
                       }}
                     />
                   </div>
@@ -198,10 +388,10 @@ export default function Settings({ settings = {} }) {
                   <div className="space-y-2">
                     <Label>Warna Tema</Label>
                     <Select
-                      value={data.theme_name}
+                      value={data.appearance_theme_name}
                       onValueChange={(val) => {
-                        setData("theme_name", val);
-                        setActiveTheme(val, data.dark_mode ? "dark" : "light");
+                        setData("appearance_theme_name", val);
+                        setActiveTheme(val, data.appearance_dark_mode ? "dark" : "light");
                       }}
                     >
                       <SelectTrigger className="w-[250px] mt-2">
@@ -223,24 +413,24 @@ export default function Settings({ settings = {} }) {
                   <div className="flex items-center justify-between border p-3 rounded-md">
                     <Label>Tampilkan Pengumuman</Label>
                     <Switch
-                      checked={data.show_announcements}
+                      checked={data.feature_announcements}
                       onCheckedChange={(val) =>
-                        setData('show_announcements', val)
+                        setData('feature_announcements', val)
                       }
                     />
                   </div>
                   <div className="flex items-center justify-between border p-3 rounded-md">
                     <Label>Tampilkan Galeri</Label>
                     <Switch
-                      checked={data.show_gallery}
-                      onCheckedChange={(val) => setData('show_gallery', val)}
+                      checked={data.feature_gallery}
+                      onCheckedChange={(val) => setData('feature_gallery', val)}
                     />
                   </div>
                   <div className="flex items-center justify-between border p-3 rounded-md">
                     <Label>Tampilkan Berita</Label>
                     <Switch
-                      checked={data.show_blog}
-                      onCheckedChange={(val) => setData('show_blog', val)}
+                      checked={data.feature_blog}
+                      onCheckedChange={(val) => setData('feature_blog', val)}
                     />
                   </div>
                 </TabsContent>
@@ -250,9 +440,9 @@ export default function Settings({ settings = {} }) {
                   <div className="flex items-center justify-between border p-3 rounded-md">
                     <Label>Mode Pemeliharaan</Label>
                     <Switch
-                      checked={data.maintenance_mode}
+                      checked={data.system_maintenance}
                       onCheckedChange={(val) =>
-                        setData('maintenance_mode', val)
+                        setData('system_maintenance', val)
                       }
                     />
                   </div>
@@ -261,9 +451,9 @@ export default function Settings({ settings = {} }) {
                     <textarea
                       className="mt-2 w-full rounded-md border bg-background p-2"
                       rows={3}
-                      value={data.maintenance_message}
+                      value={data.system_maintenance_message}
                       onChange={(e) =>
-                        setData('maintenance_message', e.target.value)
+                        setData('system_maintenance_message', e.target.value)
                       }
                     />
                   </div>

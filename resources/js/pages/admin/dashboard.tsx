@@ -40,12 +40,12 @@ export default function DashboardPremium({ stats = {}, recentPosts = [], recentM
           <div className="flex items-center gap-3">
             <div className="text-right">
               <div className="text-sm text-muted-foreground">Tema aktif</div>
-              <div className="font-medium">{settings.theme_name ?? 'default'}</div>
+              <div className="font-medium">{settings.appearance_theme_name ?? 'default'}</div>
             </div>
             <Link
               href={route('admin.settings.index')}
-              >
-            <Button size="sm">Buka Pengaturan</Button>
+            >
+              <Button size="sm">Buka Pengaturan</Button>
             </Link>
           </div>
         </div>

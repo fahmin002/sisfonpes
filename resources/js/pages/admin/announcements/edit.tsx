@@ -91,7 +91,6 @@ export default function Edit({ announcement }) {
                                     id="is_active"
                                     checked={data.is_active}
                                     onCheckedChange={(val) => {
-                                        console.log(val);
                                         setData('is_active', val);
                                     }}
                                 />

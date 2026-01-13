@@ -25,27 +25,62 @@ class SettingController extends Controller
     {
 
         // Ambil setting logo saat ini
-        $currentLogo = Setting::where('key', 'logo')->value('value');
+        $currentLogo = Setting::where('key', 'site_logo')->value('value');
+        $currentQrisImage = Setting::where('key', 'registration_qris')->value('value');
+        $currentRegistrationFlyerImage = Setting::where('key', 'registration_flyer')->value('value');
 
         // Handle upload logo baru
-        if ($request->hasFile('logo')) {
+        if ($request->hasFile('site_logo')) {
             // Hapus logo lama jika ada
             if ($currentLogo && Storage::disk('public')->exists($currentLogo)) {
                 Storage::disk('public')->delete($currentLogo);
             }
 
             // Simpan logo baru
-            $path = $request->file('logo')->store('settings', 'public');
+            $path = $request->file('site_logo')->store('settings', 'public');
 
             // Update atau buat setting baru untuk logo
             Setting::updateOrCreate(
-                ['key' => 'logo'],
+                ['key' => 'site_logo'],
                 ['value' => $path]
             );
         }
 
-        // Update semua field lain selain `_token` dan `logo`
-        foreach ($request->except(['_token', 'logo']) as $key => $value) {
+        // Handle upload qris_image baru
+        if ($request->hasFile('registration_qris')) {
+            // Hapus qris_image lama jika ada
+            if ($currentQrisImage && Storage::disk('public')->exists($currentQrisImage)) {
+                Storage::disk('public')->delete($currentQrisImage);
+            }
+
+            // Simpan qris_image baru
+            $path = $request->file('registration_qris')->store('settings', 'public');
+
+            // Update atau buat setting baru untuk qris_image
+            Setting::updateOrCreate(
+                ['key' => 'registration_qris'],
+                ['value' => $path]
+            );
+        }
+
+        // Handle Upload flyer image
+        if ($request->hasFile('registration_flyer')) {
+            if ($currentRegistrationFlyerImage && Storage::disk('public')->exists($currentRegistrationFlyerImage)) {
+                Storage::disk('public')->delete($currentRegistrationFlyerImage);
+            }
+
+            // Simpan flyer image baru
+            $path = $request->file('registration_flyer')->store('settings', 'public');
+
+            // Update atau buat setting baru untuk registration_flyer
+            Setting::updateOrCreate(
+                ['key' => 'registration_flyer'],
+                ['value' => $path]
+            );
+        }
+
+        // Update semua field lain selain `_token` dan `site_logo`
+        foreach ($request->except(['_token', 'site_logo', 'registration_qris', 'registration_flyer']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 

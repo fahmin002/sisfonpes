@@ -81,7 +81,7 @@ export default function Home({ posts = [], programs = [], galleries = [], infoLi
       </section>
 
       {/* BERITA */}
-      {settings.show_blog === "1" && (
+      {settings.feature_blog === "1" && (
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-emerald-900 mb-8 border-b pb-3 border-emerald-200">
             Berita Terbaru
@@ -129,7 +129,7 @@ export default function Home({ posts = [], programs = [], galleries = [], infoLi
       )}
 
       {/* GALERI */}
-      {settings.show_gallery === "1" && (
+      {settings.feature_gallery === "1" && (
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-emerald-900 mb-8 border-b pb-3 border-emerald-200">
             Galeri Pondok

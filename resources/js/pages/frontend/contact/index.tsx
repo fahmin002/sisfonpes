@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { toast } from "sonner";
 
-export default function ContactPage() {
+export default function ContactPage({ settings = {} }: any) {
   const { data, setData, post, processing, errors } = useForm({
     name: "",
     email: "",
@@ -145,16 +145,14 @@ export default function ContactPage() {
             <p className="flex items-start gap-3">
               <Phone className="w-5 h-5 text-emerald-700 mt-1" />
               <span>
-                <strong>Admin Pendaftaran:</strong> 0812-3456-7890 <br />
-                <strong>Administrasi Umum:</strong> 0813-9876-5432
+                <strong>Telepon:</strong> {settings.contact_phone} <br />
               </span>
             </p>
 
             <p className="flex items-start gap-3">
               <Mail className="w-5 h-5 text-emerald-700 mt-1" />
               <span>
-                admin@darulamin.sch.id <br />
-                info@darulamin.sch.id
+                {settings.contact_email}
               </span>
             </p>
           </div>
@@ -173,14 +171,13 @@ export default function ContactPage() {
 
           <p className="flex items-start gap-3 text-gray-700 mb-4">
             <MapPin className="w-5 h-5 text-emerald-700 mt-1" />
-            Pondok Pesantren Darul Amin <br />
-            Jl. Raya Pesantren No. 12, Desa Sukamaju <br />
-            Kec. Cikalong, Kab. Bandung, 40195
+            {settings.contact_address || `Jln. Medan - Kutacane Km 31, Desa Tanoh Alas, Kecamatan Babul Makmur
+Aceh Tenggara`}
           </p>
 
           <iframe
             className="w-full h-64 rounded-xl shadow"
-            src="https://maps.google.com/maps?q=Pondok%20Pesantren%20Darul%20Amin&t=&z=13&ie=UTF8&iwloc=&output=embed"
+            src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d197.0879361377095!2d97.97714600000002!3d3.287891!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zM8KwMTcnMTYuMiJOIDk3wrA1OCczNy43IkU!5e1!3m2!1sen!2sus!4v1768289196335!5m2!1sen!2sus"
             loading="lazy"
           ></iframe>
         </motion.div>
@@ -209,7 +206,7 @@ export default function ContactPage() {
         {/* CTA WA */}
         <div className="text-center">
           <Link
-            href="https://wa.me/6281234567890"
+            href={`https://wa.me/${settings.contact_phone}`}
             target="_blank"
             className="inline-block bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-3 rounded-xl text-lg font-medium shadow"
           >

@@ -4,7 +4,7 @@ import Navbar from "@/components/frontend/Navbar";
 import Footer from "@/components/frontend/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { usePage, Link } from "@inertiajs/react";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 interface FrontendLayoutProps {
   children: ReactNode;
@@ -25,6 +25,10 @@ export default function FrontendLayout({ children, title, description }: Fronten
   const settings: Record<string, string> = props.settings || {};
   const menus: MenuItem[] = props.menus || [];
   const isAnnouncementPage = url.startsWith("/pengumuman");
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+  }, []);
+
 
   // props.menus is expected via HandleInertiaRequests share
   return (

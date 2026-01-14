@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { motion } from "framer-motion";
 
-export default function AboutPage() {
+export default function AboutPage({ settings = {} }: any) {
   return (
     <FrontendLayout>
       <Head title="Tentang Kami" />
@@ -49,13 +49,13 @@ export default function AboutPage() {
               <h2 className="text-2xl font-bold text-emerald-800 mb-4">
                 Profil Singkat
               </h2>
-              <p className="leading-relaxed text-gray-700">
-                Pondok Pesantren Darul Amin didirikan sebagai lembaga pendidikan
-                Islam yang fokus pada pembinaan akhlak, ilmu agama, dan kecerdasan
-                santri. Dengan kurikulum terintegrasi antara pendidikan formal dan
-                diniyah, pesantren ini berkomitmen melahirkan generasi unggul yang
-                siap berkontribusi bagi masyarakat.
-              </p>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render"
+                dangerouslySetInnerHTML={{ __html: settings.profile_history }}
+              />
             </CardContent>
           </Card>
 
@@ -63,10 +63,13 @@ export default function AboutPage() {
           <Card className="shadow-md rounded-2xl border border-emerald-100">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-emerald-800 mb-4">Visi</h2>
-              <p className="text-gray-700 leading-relaxed">
-                “Membentuk generasi Muslim yang berakhlak mulia, berilmu, beramal,
-                serta mampu menghadapi tantangan zaman.”
-              </p>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render"
+                dangerouslySetInnerHTML={{ __html: settings.profile_vision }}
+              />
             </CardContent>
           </Card>
 
@@ -74,13 +77,60 @@ export default function AboutPage() {
           <Card className="shadow-md rounded-2xl border border-emerald-100">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-emerald-800 mb-4">Misi</h2>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li>Menanamkan nilai-nilai keislaman sejak dini.</li>
-                <li>Menyelenggarakan pendidikan formal dan diniyah yang seimbang.</li>
-                <li>Mengembangkan potensi santri melalui kegiatan kreatif dan produktif.</li>
-                <li>Membina kedisiplinan, kemandirian, dan kepedulian sosial.</li>
-                <li>Membentuk lingkungan belajar yang kondusif dan religius.</li>
-              </ul>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render"
+                dangerouslySetInnerHTML={{ __html: settings.profile_mission }}
+              />
+            </CardContent>
+          </Card>
+          {/* Keunggulan Pesantren */}
+          <Card className="shadow-md rounded-2xl border border-emerald-100">
+            <CardContent className="p-8">
+              <h2 className="text-2xl font-bold text-emerald-800 mb-4">
+                Keunggulan Pesantren
+              </h2>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render"
+                dangerouslySetInnerHTML={{ __html: settings.profile_excellence }}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Fasilitas */}
+          <Card className="shadow-md rounded-2xl border border-emerald-100">
+            <CardContent className="p-8">
+              <h2 className="text-2xl font-bold text-emerald-800 mb-4">
+                Fasilitas
+              </h2>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render"
+                dangerouslySetInnerHTML={{ __html: settings.profile_facilities }}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Ekstrakurikuler */}
+          <Card className="shadow-md rounded-2xl border border-emerald-100">
+            <CardContent className="p-8">
+              <h2 className="text-2xl font-bold text-emerald-800 mb-4">
+                Ekstrakurikuler
+              </h2>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render"
+                dangerouslySetInnerHTML={{ __html: settings.profile_extracurricular }}
+              />
             </CardContent>
           </Card>
 
@@ -97,30 +147,33 @@ export default function AboutPage() {
               </p>
 
               <div className="grid md:grid-cols-3 gap-6">
-                {[
-                  {
-                    name: "KH. Nama Pengasuh",
-                    role: "Pengasuh Pesantren",
-                  },
-                  {
-                    name: "Ust. Nama Lengkap",
-                    role: "Wakil Pengasuh",
-                  },
-                  {
-                    name: "Ustdz. Nama Lengkap",
-                    role: "Koordinator Pendidikan",
-                  },
-                ].map((person, i) => (
-                  <div
-                    key={i}
-                    className="bg-gray-50 p-4 rounded-xl border shadow-sm"
-                  >
-                    <p className="font-semibold text-emerald-800">
-                      {person.name}
-                    </p>
-                    <p className="text-gray-600 text-sm">{person.role}</p>
-                  </div>
-                ))}
+                {/* Leader 1 */}
+                <div
+                  className="bg-gray-50 p-4 rounded-xl border shadow-sm"
+                >
+                  <p className="font-semibold text-emerald-800">
+                    {settings.profile_leader1}
+                  </p>
+                  <p className="text-gray-600 text-sm">Pengasuh Pesantren</p>
+                </div>
+                {/* Leader 2 */}
+                <div
+                  className="bg-gray-50 p-4 rounded-xl border shadow-sm"
+                >
+                  <p className="font-semibold text-emerald-800">
+                    {settings.profile_leader2}
+                  </p>
+                  <p className="text-gray-600 text-sm">Kepala Madrasah</p>
+                </div>
+                {/* Leader 3 */}
+                <div
+                  className="bg-gray-50 p-4 rounded-xl border shadow-sm"
+                >
+                  <p className="font-semibold text-emerald-800">
+                    {settings.profile_leader3}
+                  </p>
+                  <p className="text-gray-600 text-sm">Kepala Asrama</p>
+                </div>
               </div>
             </CardContent>
           </Card>

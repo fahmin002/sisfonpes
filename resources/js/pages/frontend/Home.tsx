@@ -4,12 +4,18 @@ import HeroCarousel from "@/components/frontend/HeroCarousel";
 import ProgramCard from "@/components/frontend/ProgramCard";
 import PostCard from "@/components/frontend/PostCard";
 import { motion } from "framer-motion";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import { useState } from "react";
 
 export default function Home({ posts = [], programs = [], galleries = [], infoLinks = [], heroImages = [] }: any) {
   const latestPosts = posts.slice(0, 3);
   const showcase = galleries.slice(0, 6);
   const infoCards = infoLinks.slice(0, 3);
   const { props }: any = usePage();
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+
   const settings: Record<string, string> = props.settings || {};
 
   return (
@@ -33,27 +39,25 @@ export default function Home({ posts = [], programs = [], galleries = [], infoLi
         <HeroCarousel images={heroImages} />
         <div className="absolute inset-0 z-20 flex items-center px-10 md:px-20">
           <div className="max-w-2xl text-white">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight drop-shadow-xl">
-              Pondok Pesantren
-              <br />
-              <span className="text-emerald-200">Darul Amin</span>
+            <h1 className="text-2xl md:text-6xl font-bold leading-tight drop-shadow-xl">
+              {settings.site_name || "Pondok Pesantren"}
             </h1>
 
-            <p className="mt-4 text-lg md:text-xl text-emerald-100 leading-relaxed drop-shadow-xl">
-              Mencetak generasi muslim yang berakhlak mulia, berilmu luas, dan siap menghadapi tantangan zaman.
+            <p className="mt-4 text-md md:text-xl text-emerald-100 leading-relaxed drop-shadow-xl">
+              {settings.site_tagline || "Mencetak Generasi Qur'ani yang Berwawasan Modern"}
             </p>
 
             <div className="mt-6 flex gap-4">
               <Link
                 href="/pendaftaran"
-                className="bg-white text-emerald-900 px-6 py-3 rounded-xl font-semibold shadow hover:bg-emerald-100 transition"
+                className="bg-white text-sm md:text-md text-emerald-900 px-6 py-3 rounded-xl font-semibold shadow hover:bg-emerald-100 transition"
               >
                 Daftar Sekarang
               </Link>
 
               <Link
                 href="/tentang"
-                className="border border-white text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition backdrop-blur-sm"
+                className="border text-sm md:text-md border-white text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition backdrop-blur-sm"
               >
                 Tentang Kami
               </Link>
@@ -154,32 +158,32 @@ export default function Home({ posts = [], programs = [], galleries = [], infoLi
         </section>
       )}
 
-      {/* FALSAFAH */}
+
+      {/* Visi Dan Misi */}
       <section className="bg-emerald-50 py-20 rounded-2xl border border-emerald-100 shadow-inner">
         <div className="max-w-6xl mx-auto text-center px-6">
-          <h2 className="text-3xl font-bold text-emerald-900 mb-10">Falsafah Pondok</h2>
-          <div className="grid md:grid-cols-3 gap-10">
-            {[{
-              icon: "fa-heart-pulse",
-              title: "Panca Jiwa",
-              desc: "Keikhlasan, kesederhanaan, kemandirian, ukhuwah, dan kebebasan."
-            }, {
-              icon: "fa-arrow-trend-up",
-              title: "Moto",
-              desc: "Berbudi tinggi, berbadan sehat, berpengetahuan luas, berpikiran bebas."
-            }, {
-              icon: "fa-binoculars",
-              title: "Panca Jangka",
-              desc: "Arah pembangunan pondok: pendidikan, kaderisasi, sarana, dana, kesejahteraan."
-            }].map((item, i) => (
-              <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border hover:shadow-md transition">
-                <div className="text-emerald-600 text-5xl mb-4">
-                  <i className={`fa-solid ${item.icon}`}></i>
-                </div>
-                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+          <h2 className="text-3xl font-bold text-emerald-900 mb-10">Visi & Misi</h2>
+          <div className="grid md:grid-cols-2 gap-12">
+            <div className="ml-4 rounded-lg p-6 border border-emerald-200 bg-white shadow-sm">
+              <h3 className="text-2xl font-semibold text-emerald-800 mb-6">Visi</h3>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render mx-auto"
+                dangerouslySetInnerHTML={{ __html: settings.profile_vision }}
+              />
+            </div>
+            <div className="ml-4 rounded-lg p-6 border border-emerald-200 bg-white shadow-sm">
+              <h3 className="text-2xl font-semibold text-emerald-800 mb-6">Misi</h3>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="prose prose-lg max-w-none dark:prose-invert tiptap-render mx-auto"
+                dangerouslySetInnerHTML={{ __html: settings.profile_mission }}
+              />
+            </div>
           </div>
         </div>
       </section>

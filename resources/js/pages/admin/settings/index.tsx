@@ -42,7 +42,6 @@ export default function Settings({ settings = {} }) {
     feature_blog: Boolean(settings.feature_blog === '1' ? true : false),
     registration_qris: settings.registration_qris || null,
     registration_flyer: settings.registration_flyer || null,
-    registration_fee: settings.registration_fee || '',
     registration_note: settings.registration_note || '',
     system_maintenance: Boolean(
       settings.system_maintenance === true ||
@@ -50,8 +49,15 @@ export default function Settings({ settings = {} }) {
     ),
     system_maintenance_message:
       settings.system_maintenance_message || '',
+    profile_history: settings.profile_history || '',
     profile_vision: settings.profile_vision || '',
     profile_mission: settings.profile_mission || '',
+    profile_excellence: settings.profile_excellence || '',
+    profile_extracurricular: settings.profile_extracurricular || '',
+    profile_facilities: settings.profile_facilities || '',
+    profile_leader1: settings.profile_leader1 || '',
+    profile_leader2: settings.profile_leader2 || '',
+    profile_leader3: settings.profile_leader3 || '',
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -216,6 +222,15 @@ export default function Settings({ settings = {} }) {
                       </p>
                     )}
                   </div>
+                  {/* Profil Singkat (profile_history) */}
+                  <div>
+                    <TiptapEditor
+                      label='Sejarah Singkat Pesantren'
+                      value={data.profile_history}
+                      onChange={(value) => setData('profile_history', value)}
+                      error={errors.profile_history}
+                    />
+                  </div>
                   {/* Visi (Dengan TipTapEditor) */}
                   <div>
                     <TiptapEditor
@@ -232,6 +247,63 @@ export default function Settings({ settings = {} }) {
                       value={data.profile_mission}
                       onChange={(value) => setData('profile_mission', value)}
                       error={errors.profile_mission}
+                    />
+                  </div>
+                  {/* Keunggulan (Dengan TipTapEditor) */}
+                  <div>
+                    <TiptapEditor
+                      label='Keunggulan Pesantren'
+                      value={data.profile_excellence}
+                      onChange={(value) => setData('profile_excellence', value)}
+                      error={errors.profile_excellence}
+                    />
+                  </div>
+                  {/* Ekstrakurikuler (Dengan TipTapEditor) */}
+                  <div>
+                    <TiptapEditor
+                      label='Kegiatan Ekstrakurikuler'
+                      value={data.profile_extracurricular}
+                      onChange={(value) => setData('profile_extracurricular', value)}
+                      error={errors.profile_extracurricular}
+                    />
+                  </div>
+                  {/* Fasilitas (Dengan TipTapEditor) */}
+                  <div>
+                    <TiptapEditor
+                      label='Fasilitas Pesantren'
+                      value={data.profile_facilities}
+                      onChange={(value) => setData('profile_facilities', value)}
+                      error={errors.profile_facilities}
+                    />
+                  </div>
+                  {/* Leader1 (Pimpinan Pondok) textbox */}
+                  <div>
+                    <Label>Pimpinan Pondok 1</Label>
+                    <Input
+                      value={data.profile_leader1}
+                      onChange={(e) => setData('profile_leader1', e.target.value)}
+                      placeholder="Nama pimpinan pondok 1"
+                      className='mt-2'
+                    />
+                  </div>
+                  {/* Leader2 (Pimpinan Pondok) textbox */}
+                  <div>
+                    <Label>Pimpinan Pondok 2</Label>
+                    <Input
+                      value={data.profile_leader2}
+                      onChange={(e) => setData('profile_leader2', e.target.value)}
+                      placeholder="Nama pimpinan pondok 2"
+                      className='mt-2'
+                    />
+                  </div>
+                  {/* Leader3 (Pimpinan Pondok) textbox */}
+                  <div>
+                    <Label>Pimpinan Pondok 3</Label>
+                    <Input
+                      value={data.profile_leader3}
+                      onChange={(e) => setData('profile_leader3', e.target.value)}
+                      placeholder="Nama pimpinan pondok 3"
+                      className='mt-2'
                     />
                   </div>
                 </TabsContent>
@@ -307,28 +379,13 @@ export default function Settings({ settings = {} }) {
                       </p>
                     )}
                   </div>
-                  {/* registration fee */}
-                  <div>
-                    <Label>Biaya Pendaftaran</Label>
-                    <Input
-                      value={data.registration_fee}
-                      onChange={(e) =>
-                        setData('registration_fee', e.target.value)
-                      }
-                      placeholder="Biaya pendaftaran siswa baru"
-                      className='mt-2'
-                    />
-                  </div>
                   {/* registration note */}
                   <div>
-                    <Label>Catatan Pendaftaran</Label>
-                    <Input
+                    <TiptapEditor
+                      label='Catatan Pendaftaran'
                       value={data.registration_note}
-                      onChange={(e) =>
-                        setData('registration_note', e.target.value)
-                      }
-                      placeholder="Catatan penting terkait pendaftaran"
-                      className='mt-2'
+                      onChange={(value) => setData('registration_note', value)}
+                      error={errors.registration_note}
                     />
                   </div>
                 </TabsContent>

@@ -14,8 +14,9 @@ import FrontendLayout from "@/layouts/frontend-layout";
 import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
-export default function RegistrationForm() {
+export default function RegistrationForm({ settings = {} }: any) {
     const { data, setData, post, processing, errors, reset } = useForm({
         full_name: "",
         nik: "",
@@ -70,50 +71,37 @@ export default function RegistrationForm() {
                 <div className="container max-w-3xl mx-auto p-10">
                     <Card className="border-border mb-4 shadow-md">
                         <CardContent>
+                            {/* Gambar Flyer Registrasi */}
+                            <img
+                                src={settings.registration_flyer ? `/storage/${settings.registration_flyer}` : '/images/registration-flyer.png'}
+                                alt="Flyer Pendaftaran Santri"
+                                className="w-full h-auto rounded-lg mb-6 shadow"
+                            />
                             <div className="bg-emerald-50 border-l-4 border-emerald-800 p-4 rounded-md mb-6">
                                 <h2 className="font-semibold text-lg text-emerald-700">Alur Pendaftaran Santri</h2>
-                                <ol className="list-decimal pl-5 mt-2 space-y-1 text-sm">
-                                    <li>Calon santri melakukan transfer biaya pendaftaran sebesar <b>Rp 200.000</b></li>
-                                    <li>Transfer ke rekening berikut:</li>
-                                    <ul className="pl-6 text-sm">
-                                        <li><b>BANK BRI</b></li>
-                                        <li>No. Rekening: <b>1234 5678 9012 345</b></li>
-                                        <li>Atas Nama: <b>Pondok Pesantren Nurul Ilmi</b></li>
-                                    </ul>
-                                    <li>Simpan bukti transfer (foto atau PDF)</li>
-                                    <li>Isi formulir pendaftaran dan unggah bukti transfer</li>
-                                    <li>Pihak pesantren akan melakukan verifikasi dan dapat dicek melalui website.</li>
-                                </ol>
-                            </div>
-                            <div className="mt-3  border-l-4 border-emerald-800 p-4 p-3 bg-emerald-50 rounded-lg flex justify-between items-center">
-                                <div>
-                                    <p className="text-sm">No. Rekening:</p>
-                                    <p className="font-semibold text-lg select-all" id="nomorRekening">
-                                        123456789012345
+                                {settings.registration_note ? (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="prose prose-lg max-w-none dark:prose-invert tiptap-render"
+                                        dangerouslySetInnerHTML={{ __html: settings.registration_note }}
+                                    />
+                                ) : (
+                                    <p className="mt-2 text-emerald-800">
+                                        Silakan ikuti alur pendaftaran berikut: 1) Isi formulir pendaftaran di bawah. 2) Lakukan pembayaran biaya pendaftaran sebesar Rp 150.000 ke nomor rekening yang tertera. 3) Unggah bukti transfer pada formulir pendaftaran. 4) Tunggu konfirmasi dari pihak pondok melalui kontak yang Anda berikan.
                                     </p>
-                                    <p className="text-sm">BANK BRI - a/n Pondok Pesantren Nurul Ilmi</p>
-                                </div>
-
-                                <button
-                                    type="button"
-                                    className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
-                                    onClick={() => {
-                                        navigator.clipboard.writeText("123456789012345");
-                                        alert("Nomor rekening telah disalin!");
-                                    }}
-                                >
-                                    Copy
-                                </button>
+                                )}
                             </div>
                             <div className="mt-4 text-center">
                                 <p className="font-semibold mb-2">Atau scan QRIS berikut:</p>
                                 <img
-                                    src="/images/qris.png"
+                                    src={settings.registration_qris ? `/storage/${settings.registration_qris}` : '/images/qris.png'}
                                     alt="QRIS Pembayaran"
                                     className="mx-auto w-56 h-56 rounded-lg shadow"
                                 />
                                 <a
-                                    href="/images/qris.png"
+                                    href={settings.registration_qris ? `/storage/${settings.registration_qris}` : '/images/qris.png'}
                                     download
                                     className="inline-block mt-3 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
                                 >

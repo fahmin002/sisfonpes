@@ -12,6 +12,8 @@ export default function ContactPage({ settings = {} }: any) {
     subject: "",
     message: "",
   });
+  // Contact Phone untuk whatsapp tanpa 0 di depan, misal 6281234567890
+  const contactPhone = settings.contact_phone?.replace(/^0+/, '62') || "6281234567890";
 
   const submit = (e) => {
     e.preventDefault();
@@ -205,13 +207,13 @@ Aceh Tenggara`}
 
         {/* CTA WA */}
         <div className="text-center">
-          <Link
-            href={`https://wa.me/${settings.contact_phone}`}
+          <a
+            href={`https://wa.me/${contactPhone}`}
             target="_blank"
             className="inline-block bg-emerald-700 hover:bg-emerald-800 text-white px-8 py-3 rounded-xl text-lg font-medium shadow"
           >
             Hubungi Admin via WhatsApp
-          </Link>
+          </a>
         </div>
       </div>
     </FrontendLayout>

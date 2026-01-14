@@ -99,7 +99,7 @@ export default function HeroCarousel({ images = [], autoplay = true, interval = 
             key={i}
             className={`w-3 h-3 rounded-full focus:outline-none ${i === index ? 'scale-110' : 'opacity-60'}`}
             onClick={() => setIndex(i)}
-            aria-label={`Go to slide ${i+1}`}
+            aria-label={`Go to slide ${i + 1}`}
             aria-current={i === index}
           />
         ))}
